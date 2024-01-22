@@ -1,6 +1,7 @@
 package org.ait.competence.pages;
 
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -56,5 +57,16 @@ public abstract class BasePage {
     public boolean isTextPresent(WebElement element,String text) {
         return element.getText().contains(text);
     }
+
+    public boolean isElementPresent(WebElement element, int timeout) {
+        try {
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(timeout));
+            wait.until(ExpectedConditions.visibilityOf(element));
+            return true;
+        } catch (TimeoutException e) {
+            return false;
+        }
+    }
+
 
 }
