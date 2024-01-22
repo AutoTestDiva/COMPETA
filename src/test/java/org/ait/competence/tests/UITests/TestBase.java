@@ -1,4 +1,4 @@
-package org.ait.competence.tests;
+package org.ait.competence.tests.UITests;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;

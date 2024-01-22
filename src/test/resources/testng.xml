@@ -2,7 +2,7 @@
 <suite name="TestSuite">
     <test name="Test">
         <classes>
-            <class name="org.ait.competence.tests.SignUpTests"/>
+            <class name="org.ait.competence.tests.UITests.SignUpTests"/>
         </classes>
     </test>
 </suite>
