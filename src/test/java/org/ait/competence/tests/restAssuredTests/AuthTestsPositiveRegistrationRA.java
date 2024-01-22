@@ -13,19 +13,26 @@ public class AuthTestsPositiveRegistrationRA extends TestBaseRA{
         user.registerUser("nata@gmail.com", "Nata2024!")
                 .then()
                 .assertThat().statusCode(200);
+     //  user.deleteUser("nata3@gmail.com");
     }
 
-//    @Test()            //тоже рабочий тест, но взаимоисключающий с TestRA1 !!!
+//    @Test()
 //    public void a_registerUserPositiveTestRA2() throws SQLException {
 //        user.registerUser("nata@gmail.com", "Nata2024!")
 //                .then()
 //                .assertThat().statusCode(200)
 //                .assertThat().body("email", containsString("nata@gmail.com"))
 //                .assertThat().body("email", equalTo("nata@gmail.com"));
+//        user.deleteUser("nata@gmail.com");
 //    }
 
-    @AfterMethod
-    public void postConditionRA() throws SQLException {
-        user.deleteUser("nata@gmail.com");
-    }
+   // @AfterMethod
+//        public void postConditionRA() throws SQLException {
+//        user.deleteUser("nata@gmail.com");
+//    }
+
+@Test
+public static void main(String[] args) {
+    user.deleteUserByEmail("nata@gmail.com");
+}
 }

@@ -6,7 +6,7 @@ import java.sql.*;
 import java.util.Map;
 
 public class DataBaseRA {
-    private static Connection connection;
+    public static Connection connection;
 
     static {
         InputStream inputStream = DataBaseRA
@@ -30,7 +30,8 @@ public class DataBaseRA {
         }
     }
 
-    public static ResultSet requestSelect(String query) {
+
+        public static ResultSet requestSelect(String query) {
         try {
             Statement statement = connection.createStatement();
             ResultSet result = statement.executeQuery(query);
