@@ -35,7 +35,6 @@ public class UserProfileControllerTestsRA extends TestBaseRA {
         PutUserProfileDto userProfile = PutUserProfileDto.builder()
                 .lastName("Pupkin")
                 .build();
-
         given()
                 .cookie(cookie)
                 .contentType("application/json")
