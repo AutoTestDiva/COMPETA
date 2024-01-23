@@ -5,7 +5,6 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
 public class LandingPage extends BasePage {
-
     public LandingPage(WebDriver driver) {
         super(driver);
     }
@@ -24,4 +23,5 @@ public class LandingPage extends BasePage {
 
         return new LogInPage(driver);
     }
+
 }

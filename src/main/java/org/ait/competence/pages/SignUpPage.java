@@ -3,6 +3,10 @@ package org.ait.competence.pages;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.time.Duration;
 
 public class SignUpPage extends BasePage {
 
@@ -22,27 +26,29 @@ public class SignUpPage extends BasePage {
     @FindBy(xpath = "//button[text()='Register']")
     WebElement registerButton;
 
-    public ProfilePage signUp(String email, String password, String repeatPassword) {
-        //typeWithJSExecutor(emailField, email, 0, 200);
+    public HomePage signUp(String email, String password, String repeatPassword) {
         type(emailField, email);
         type(passwordField, password);
         type(repeatPasswordField, repeatPassword);
         click(registerButton);
-        return new ProfilePage(driver);
+        return new HomePage(driver);
     }
 
     public SignUpPage signUpNegative(String email, String password, String repeatPassword) {
         type(emailField, email);
-        //type(passwordField, password);
-        //type(repeatPasswordField, repeatPassword);
-        //click(registerButton);
+        type(passwordField, password);
+        type(repeatPasswordField, repeatPassword);
+        click(registerButton);
         return this;
     }
 
-    public SignUpPage verifyErrorMessageIsPresent() {
-        new ProfilePage(driver).isTextPresent(errorMessage,"E-mail is not valid");
+    @FindBy(xpath = "//div[contains(text(),\"User with this email 'student1@gmail.com' already \")]")
+    WebElement errorMessageUserExists;
+
+    public SignUpPage verifyUserExistsMessageIsPresent() {
+        new SignUpPage(driver).isTextPresent(errorMessageUserExists,
+                "User with this email 'student1@gmail.com' already exists");
         return this;
     }
-
 
 }
