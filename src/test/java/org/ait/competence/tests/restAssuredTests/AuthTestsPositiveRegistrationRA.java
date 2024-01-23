@@ -9,11 +9,10 @@ import static org.hamcrest.Matchers.equalTo;
 public class AuthTestsPositiveRegistrationRA extends TestBaseRA{
     @Test()
     public void registerUserPositiveTestRA1() throws SQLException {
-        user.registerUser("nata4@gmail.com", "Nata4_2024!")
+        user.registerUser("nata6@gmail.com", "Nata6_2024!")
                 .then()
                 .assertThat().statusCode(200);
      }
-
     @Test()
     public void a_registerUserPositiveTestRA2() throws SQLException {
         user.registerUser("nata@gmail.com", "Nata2024!")
@@ -24,7 +23,7 @@ public class AuthTestsPositiveRegistrationRA extends TestBaseRA{
    }
     @AfterMethod
     public static void postConditionRA() throws SQLException {
-    String[] args = {"nata4@gmail.com"};
-        user.deleteUserFromDB(args);
+        String[] args = {"nata6@gmail.com"};
+        deleteUser.deleteUserFromDB(args);
     }
  }

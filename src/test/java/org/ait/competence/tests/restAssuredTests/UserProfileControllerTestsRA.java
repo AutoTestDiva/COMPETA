@@ -1,14 +1,10 @@
 package org.ait.competence.tests.restAssuredTests;
 
 import io.restassured.http.Cookie;
-import io.restassured.response.ValidatableResponse;
-import org.ait.competence.dto.ExistEmailResponseDto;
 import org.ait.competence.dto.PutUserProfileDto;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
 import java.sql.SQLException;
-
 import static io.restassured.RestAssured.given;
 
 public class UserProfileControllerTestsRA extends TestBaseRA {

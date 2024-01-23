@@ -11,15 +11,12 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.containsString;
 
 public class AuthenticationTestsRA extends TestBaseRA{
-
     private Cookie cookie;
-
     @BeforeMethod
     public void preconditionRA() throws SQLException {
         user.registerUser("nata@gmail.com", "Nata2024!");
         cookie = user.getLoginCookie("nata@gmail.com", "Nata2024!");
     }
-
 
     @Test
     public void loginAsUserPositiveTestRA1() {
@@ -69,7 +66,8 @@ public class AuthenticationTestsRA extends TestBaseRA{
     }
 
     @AfterMethod
-    public void postConditionRA() throws SQLException {
-        user.deleteUser("nata@gmail.com");
+    public static void postConditionRA() throws SQLException {
+        String[] args = {"nata6@gmail.com"};
+        deleteUser.deleteUserFromDB(args);
     }
 }

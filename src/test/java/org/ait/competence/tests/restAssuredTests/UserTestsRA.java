@@ -37,7 +37,6 @@ public class UserTestsRA extends TestBaseRA{
                 .extract().response().as(NewPasswordEqualsOldDto.class);
         System.out.println(newPasswordEqualsOld.getMessage());
     }
-
     @Test
     public void userNotAuthenticatedTestRA1() {
         UserNotAuthenticatedDto userNotAuthenticated = user.resetUserPasswordRA("Nata0009!", "Nata0001!")
@@ -46,8 +45,6 @@ public class UserTestsRA extends TestBaseRA{
                 .extract().response().as(UserNotAuthenticatedDto.class);
        Assert.assertEquals(userNotAuthenticated.getMessage(), "User not authenticated");
     }
-
-
     @Test
     public void gettingProfilePositiveTestRA(){
         given().contentType(ContentType.JSON).cookie(cookie).when().get("/api/user/me")
@@ -62,8 +59,9 @@ public class UserTestsRA extends TestBaseRA{
                 .assertThat().statusCode(401);
     }
 
-        @AfterMethod
-    public void postConditionRA() throws SQLException {
-        user.deleteUser("nata@gmail.com");
+    @AfterMethod
+    public static void postConditionRA() throws SQLException {
+        String[] args = {"nata6@gmail.com"};
+        deleteUser.deleteUserFromDB(args);
     }
 }
