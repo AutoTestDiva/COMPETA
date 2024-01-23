@@ -17,7 +17,6 @@ public class UserProfileControllerTestsRA extends TestBaseRA {
 //        cookie = user.getLoginCookie("nata@gmail.com", "Nata2024!");
         user.registerUser("vasja.pupkin@competa.test", "userPass007!");
         cookie = user.getLoginCookie("vasja.pupkin@competa.test", "userPass007!");
-
     }
 
     @Test
