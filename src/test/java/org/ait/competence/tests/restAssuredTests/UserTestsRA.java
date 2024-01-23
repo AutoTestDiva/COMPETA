@@ -51,6 +51,7 @@ public class UserTestsRA extends TestBaseRA{
                 .then()
                 .assertThat().statusCode(200)
                 .assertThat().body("email", containsString("nata@gmail.com"));
+
     }
     @Test
     public void gettingProfileNotAuthenticatedUserTestRA(){
