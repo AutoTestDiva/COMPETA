@@ -22,29 +22,28 @@ public class UserProfileControllerTestsRA extends TestBaseRA {
 
     @Test
     public void getUserProfilePositiveTestRA() throws SQLException {
-       // String userId = user.getUserIdByEmail("nata@gmail.com");
+        // String userId = user.getUserIdByEmail("nata@gmail.com");
         String userId = user.getUserIdByEmail("vasja.pupkin@competa.test");
-         given().cookie(cookie).when().get("/api/user-profile/" + userId)
+        given().cookie(cookie).when().get("/api/user-profile/" + userId)
                 .then()
                 .assertThat().statusCode(200);
-   }
+    }
 
     @Test
     public void putUserProfilePositiveTestRA () throws SQLException {
-       String userId = user.getUserIdByEmail("vasja.pupkin@competa.test");
+        String userId = user.getUserIdByEmail("vasja.pupkin@competa.test");
 
         PutUserProfileDto userProfile = PutUserProfileDto.builder()
                 .lastName("Pupkin")
                 .build();
 
-                 given()
-                         .cookie(cookie)
-                         .contentType("application/json")
-                         .body(userProfile)
-                         . when()
-                         .put("/api/user-profile/" + userId)
-                         .then()
+        given()
+                .cookie(cookie)
+                .contentType("application/json")
+                .body(userProfile)
+                . when()
+                .put("/api/user-profile/" + userId)
+                .then()
                 .assertThat().statusCode(200);
-
     }
 }

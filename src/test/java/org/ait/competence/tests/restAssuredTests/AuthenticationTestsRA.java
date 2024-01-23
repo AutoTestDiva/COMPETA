@@ -28,7 +28,7 @@ public class AuthenticationTestsRA extends TestBaseRA{
     }
     @Test
     public void loginAsUserPositiveTestRA2() {
-         user.loginUserRA("nata@gmail.com", "Nata2024!")
+        user.loginUserRA("nata@gmail.com", "Nata2024!")
                 .then()
                 .assertThat().statusCode(200)
                 .assertThat().body("message", containsString("Login successful"));
@@ -43,7 +43,7 @@ public class AuthenticationTestsRA extends TestBaseRA{
     }
     @Test
     public void loginAsUserWithIncorrectPasswordTestRA2() {
-         user.loginUserRA("nata@gmail.com", "Nata2024")
+        user.loginUserRA("nata@gmail.com", "Nata2024")
                 .then()
                 .assertThat().statusCode(401)
                 .assertThat().body("message", containsString("Incorrect username or password"));

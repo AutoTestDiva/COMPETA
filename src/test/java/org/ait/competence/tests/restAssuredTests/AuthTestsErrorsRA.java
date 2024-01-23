@@ -12,7 +12,7 @@ public class AuthTestsErrorsRA extends TestBaseRA {
     @BeforeMethod
     public void preconditionRA() throws SQLException {
         user.registerUser("nata@gmail.com", "Nata2024!");
-   }
+    }
     @Test()
     public void registerUserWithExistEmailTestRA1() throws SQLException {
         ExistEmailResponseDto existEmail = user.registerUser("nata@gmail.com", "Nata2024!")

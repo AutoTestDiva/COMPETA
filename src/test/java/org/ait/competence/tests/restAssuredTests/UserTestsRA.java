@@ -43,7 +43,7 @@ public class UserTestsRA extends TestBaseRA{
                 .then()
                 .assertThat().statusCode(401)
                 .extract().response().as(UserNotAuthenticatedDto.class);
-       Assert.assertEquals(userNotAuthenticated.getMessage(), "User not authenticated");
+        Assert.assertEquals(userNotAuthenticated.getMessage(), "User not authenticated");
     }
     @Test
     public void gettingProfilePositiveTestRA(){
@@ -54,7 +54,7 @@ public class UserTestsRA extends TestBaseRA{
     }
     @Test
     public void gettingProfileNotAuthenticatedUserTestRA(){
-       given().contentType(ContentType.JSON).when().get("/api/user/me")
+        given().contentType(ContentType.JSON).when().get("/api/user/me")
                 .then()
                 .assertThat().statusCode(401);
     }

@@ -22,7 +22,7 @@ public class DataBaseRA {
             throw new RuntimeException("Error creating database connection", e);
         }
     }
-        public static ResultSet requestSelect(String query) {
+    public static ResultSet requestSelect(String query) {
         try {
             Statement statement = DataBaseRA.connection().createStatement();
             ResultSet result = statement.executeQuery(query);
