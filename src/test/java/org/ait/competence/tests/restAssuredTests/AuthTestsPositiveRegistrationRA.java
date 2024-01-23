@@ -7,13 +7,7 @@ import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 
 public class AuthTestsPositiveRegistrationRA extends TestBaseRA{
-    @Test()
-    public void registerUserPositiveTestRA1() throws SQLException {
-        user.registerUser("nata6@gmail.com", "Nata6_2024!")
-                .then()
-                .assertThat().statusCode(200);
-    }
-    @Test()
+        @Test()
     public void a_registerUserPositiveTestRA2() throws SQLException {
         user.registerUser("nata@gmail.com", "Nata2024!")
                 .then()
@@ -21,9 +15,16 @@ public class AuthTestsPositiveRegistrationRA extends TestBaseRA{
                 .assertThat().body("email", containsString("nata@gmail.com"))
                 .assertThat().body("email", equalTo("nata@gmail.com"));
     }
+
+    @Test()
+    public void registerUserPositiveTestRA1() throws SQLException {
+        user.registerUser("nata@gmail.com", "Nata2024!")
+                .then()
+                .assertThat().statusCode(200);
+    }
     @AfterMethod
     public static void postConditionRA() throws SQLException {
-        String[] args = {"nata6@gmail.com"};
+        String[] args = {"nata@gmail.com"};
         deleteUser.deleteUserFromDB(args);
     }
  }

@@ -61,7 +61,7 @@ public class UserTestsRA extends TestBaseRA{
 
     @AfterMethod
     public static void postConditionRA() throws SQLException {
-        String[] args = {"nata6@gmail.com"};
+        String[] args = {"nata@gmail.com"};
         deleteUser.deleteUserFromDB(args);
     }
 }
