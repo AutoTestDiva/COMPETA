@@ -8,11 +8,11 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
 
 import java.time.Duration;
 
 public abstract class BasePage {
-
     WebDriver driver;
 
     public BasePage(WebDriver driver) {
@@ -38,8 +38,8 @@ public abstract class BasePage {
         element.click();
     }
 
-    public void typeWithJSExecutor(WebElement element, String text, int x, int y){
-        if (text != null){
+    public void typeWithJSExecutor(WebElement element, String text, int x, int y) {
+        if (text != null) {
             clickWithJSExecutor(element, x, y);
             element.clear();
             element.sendKeys(text);
@@ -54,7 +54,7 @@ public abstract class BasePage {
     @FindBy(xpath = "//p[text()='E-mail is not valid']")
     WebElement errorMessage;
 
-    public boolean isTextPresent(WebElement element,String text) {
+    public boolean isTextPresent(WebElement element, String text) {
         return element.getText().contains(text);
     }
 
@@ -67,6 +67,5 @@ public abstract class BasePage {
             return false;
         }
     }
-
 
 }

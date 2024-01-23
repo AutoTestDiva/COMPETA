@@ -10,7 +10,6 @@ import org.testng.Assert;
 import java.time.Duration;
 
 public class ProfilePage extends BasePage {
-
     public ProfilePage(WebDriver driver) {
         super(driver);
     }
@@ -22,7 +21,5 @@ public class ProfilePage extends BasePage {
         Assert.assertTrue(shouldHaveText(registrationDateText, text, 10));
         return this;
     }
-
-
 
 }
