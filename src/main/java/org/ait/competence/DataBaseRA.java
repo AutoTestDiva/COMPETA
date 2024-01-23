@@ -8,8 +8,6 @@ import java.sql.*;
 import java.util.Map;
 
 public class DataBaseRA {
-
-
     public static Connection connection() {
         try (InputStream inputStream = DataBaseRA.class.getClassLoader().getResourceAsStream("application.yml")) {
             Yaml yaml = new Yaml();
@@ -24,33 +22,6 @@ public class DataBaseRA {
             throw new RuntimeException("Error creating database connection", e);
         }
     }
-
-
-    //public static Connection connection;
-
-//    static {
-//        InputStream inputStream = DataBaseRA
-//                .class
-//                .getClassLoader()
-//                .getResourceAsStream("application.yml");
-//        Yaml yaml = new Yaml();
-//        Map<String, Object> load = yaml.load(inputStream);
-//
-//        String usernameDB = (String) load.get("username");
-//        String userPasswordDB = (String) load.get("password");
-//        String dbUrl = (String) load.get("url");
-//
-//        try {
-////            String usernameDB = System.getenv("DATABASE_USERNAME"); // environment variables
-////            String userPasswordDB = System.getenv("DATABASE_PASSWORD"); // environment variables
-//            connection = DriverManager.getConnection(
-//                    dbUrl, usernameDB, userPasswordDB);
-//        } catch (SQLException throwables) {
-//            throwables.printStackTrace();
-//        }
-//    }
-
-
         public static ResultSet requestSelect(String query) {
         try {
             Statement statement = DataBaseRA.connection().createStatement();
@@ -79,5 +50,4 @@ public class DataBaseRA {
             exception.printStackTrace();
         }
     }
-
 }

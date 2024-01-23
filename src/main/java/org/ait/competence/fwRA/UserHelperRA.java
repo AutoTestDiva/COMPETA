@@ -1,32 +1,20 @@
 package org.ait.competence.fwRA;
 
-
 import io.restassured.http.ContentType;
 import io.restassured.http.Cookie;
 import io.restassured.response.Response;
 import lombok.var;
-import org.ait.competence.DataBaseRA;
 import org.ait.competence.dto.NewUserDto;
 import org.ait.competence.dto.ResetUserPasswordDto;
-import org.yaml.snakeyaml.Yaml;
-
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.sql.*;
-import java.util.Map;
-
 import static io.restassured.RestAssured.given;
 import static org.ait.competence.DataBaseRA.connection;
-//import static org.ait.competence.DataBaseRA.createConnection;
-//import static org.ait.competence.DataBaseRA.connection;
 
 public class UserHelperRA extends BaseHelperRA {
     public UserHelperRA() {
-
     }
-
     public static String loginDataEncoded(String email, String password) {
         String encodedMail;
         String encodedPassword;
@@ -52,7 +40,6 @@ public class UserHelperRA extends BaseHelperRA {
                 .body(loginDataEncoded(email, password))
                 .when()
                 .post("/api/login");
-
         return response.getDetailedCookie("JSESSIONID");
     }
 
@@ -61,59 +48,14 @@ public class UserHelperRA extends BaseHelperRA {
                 .email(email)
                 .password(password)
                 .build();
-
         return given()
                 .contentType(ContentType.JSON)
                 .body(user)
                 .when()
                 .post("/api/auth/register");
     }
-
-
-
-
-
-    public  String getUserIdByEmail(String email) throws SQLException {
-        String userId;
-        try {
-          userId = db.requestSelect("SELECT id FROM users WHERE email = '" + email + "';")
-
-                    .getString(1);
-        } catch (SQLException e) {
-            userId = null;
-            System.out.println("The user is not found" + e);
-        }
-        return userId;
-    }
-
-
-    public String getUserUuidByEmail(String email) {
-        String userUuid;
-        try{
-            String userId = getUserIdByEmail(email);
-            userUuid = db.requestSelect("SELECT id FROM users WHERE id = " + userId + ";")
-                    .getString(1);
-        }catch (SQLException e){
-            userUuid = null;
-            System.out.println("User is not found.  " + e);
-        }
-        return userUuid; // TODO change getUserUuidByEmail
-    }
-
-    private void deleteUserById(String userId) throws SQLException {
-        db.requestDelete("DELETE FROM users_roles WHERE users_id = " + userId + ";");
-        db.requestDelete("DELETE FROM user_profile WHERE id = " + userId + ";");
-        db.requestDelete("DELETE FROM users_aud WHERE id = " + userId + ";");
-        db.requestDelete("DELETE FROM users WHERE id = " + userId + ";");
-    }
-    public void deleteUser(String email) throws SQLException {
-        String userId = getUserIdByEmail(email);
-        if (userId != null) {
-            deleteUserById(userId);
-        }
-    }
     public Response resetUserPasswordRA(String oldPassword, String newPassword) {
-       ResetUserPasswordDto resetUserPassword= ResetUserPasswordDto.builder()
+        ResetUserPasswordDto resetUserPassword= ResetUserPasswordDto.builder()
                 .oldPassword(oldPassword)
                 .newPassword(newPassword)
                 .build();
@@ -123,24 +65,43 @@ public class UserHelperRA extends BaseHelperRA {
                 .when()
                 .put("/api/user/password-reset");
     }
-    //
-    public void deleteUserByEmail(String email) {
+
+    public static String getUserIdByEmail(String email) throws SQLException {
+        String userId;
+        try {
+          userId = db.requestSelect("SELECT id FROM users WHERE email = '" + email + "';")
+                    .getString(1);
+        } catch (SQLException e) {
+            userId = null;
+            System.out.println("The user is not found" + e);
+        }
+        return userId;
+    }
+
+    public static void deleteUser(String email) throws SQLException {
+        String userId = getUserIdByEmail(email);
+        if (userId != null) {
+            deleteUserById(userId);
+
+        }
+    }
+    private static void deleteUserById(String userId) throws SQLException {
+        db.requestDelete("DELETE FROM users_roles WHERE users_id = " + userId + ";");
+        // db.requestDelete("DELETE FROM user_profile WHERE id = " + userId + ";");
+        db.requestDelete("DELETE FROM users_aud WHERE id = " + userId + ";");
+        //db.requestDelete("DELETE FROM users WHERE id = " + userId + ";");
+    }
+
+   public static void deleteUserByEmail(String email) {
            try (Connection connection = connection()) {
                 connection.setAutoCommit(false);
-
                 // Найти идентификатор пользователя по электронной почте
                 int userId = getUserIdByEmail(connection, email);
-
                 if (userId != -1) {
                     // Обнулить user_profile_id в таблице users для данного пользователя
                     updateUserProfileId(connection, userId, null);
-
                     // Теперь можно удалить записи из user_profile, связанные с пользователем
                     deleteUserProfileByUserId(connection, userId);
-
-                    // Если необходимо, вы также можете удалить пользователя из таблицы users
-                    // deleteUserById(connection, userId);
-
                     connection.commit();
                 } else {
                     System.out.println("Пользователь с email '" + email + "' не найден.");
@@ -175,13 +136,16 @@ public class UserHelperRA extends BaseHelperRA {
             preparedStatement.executeUpdate();
         }
     }
-
-    public void deleteUserUserById(String email) throws SQLException {
+    public static void deleteUserUserById(String email) throws SQLException {
         String userId = getUserIdByEmail(email);
         if (userId != null) {
             db.requestDelete("DELETE FROM users WHERE id = " + userId + ";");
-            //deleteUserById(userId);
         }
-
-
-    }}
+    }
+    public static void deleteUserFromDB(String[] args) throws SQLException {
+        String email = args[0];
+        deleteUser(email);
+        deleteUserByEmail(email);
+        deleteUserUserById(email);
+    }
+}
