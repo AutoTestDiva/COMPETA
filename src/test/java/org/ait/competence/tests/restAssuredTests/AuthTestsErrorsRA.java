@@ -22,7 +22,7 @@ public class AuthTestsErrorsRA extends TestBaseRA {
         System.out.println(existEmail.getMessage());
     }
     @Test()
-    public void registerUserWithExistEmailTestRA3() throws SQLException {//пока есть баг в некорректном ответе,
+    public void registerUserWithExistEmailTestRA2() throws SQLException {
         user.registerUser("nata@gmail.com", "Nata2024!")
                 .then()
                 .assertThat().statusCode(400);

@@ -8,7 +8,7 @@ import java.sql.SQLException;
 
 import static org.ait.competence.DataBaseRA.connection;
 
-public class DeleteUserHelperRA extends BaseHelperRA{
+public class DeleteUserHelperRA extends BaseHelperRA {
 
     public static void deleteUser(String email) throws SQLException {
         String userId = UserHelperRA.getUserIdByEmail(email);
@@ -16,6 +16,7 @@ public class DeleteUserHelperRA extends BaseHelperRA{
             deleteUserById(userId);
         }
     }
+
     private static void deleteUserById(String userId) throws SQLException {
         db.requestDelete("DELETE FROM users_roles WHERE users_id = " + userId + ";");
         // db.requestDelete("DELETE FROM user_profile WHERE id = " + userId + ";");
@@ -67,16 +68,33 @@ public class DeleteUserHelperRA extends BaseHelperRA{
             preparedStatement.executeUpdate();
         }
     }
+
     public static void deleteUserUserById(String email) throws SQLException {
         String userId = UserHelperRA.getUserIdByEmail(email);
         if (userId != null) {
             db.requestDelete("DELETE FROM users WHERE id = " + userId + ";");
         }
     }
+
     public static void deleteUserFromDB(String[] args) throws SQLException {
         String email = args[0];
         deleteUser(email);
         deleteUserByEmail(email);
         deleteUserUserById(email);
+    }
+
+    public static void deleteUserFromDB1(String[] args) throws SQLException {
+        String email = args[0];
+        deleteUser(email);
+        deleteUserByEmail(email);
+        deleteUserUserById2(email);
+    }
+
+    public static void deleteUserUserById2(String email) throws SQLException {
+        String userId = UserHelperRA.getUserIdByEmail(email);
+        if (userId != null) {
+            db.requestDelete("DELETE FROM confirmation_code WHERE user_id = " + userId + ";");
+            db.requestDelete("DELETE FROM users WHERE id = " + userId + ";");
+        }
     }
 }
