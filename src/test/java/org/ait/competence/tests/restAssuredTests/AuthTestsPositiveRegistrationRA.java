@@ -9,7 +9,7 @@ import static org.hamcrest.Matchers.equalTo;
 public class AuthTestsPositiveRegistrationRA extends TestBaseRA{
         @Test()
     public void a_registerUserPositiveTestRA1() throws SQLException {
-        user.registerUser("nata@gmail.com", "Nata2024!")
+        user.registerUser("nata@gmail.com", "Nata-2024!")
                 .then()
                 .assertThat().statusCode(200)
                 .assertThat().body("email", containsString("nata@gmail.com"))
@@ -23,19 +23,9 @@ public class AuthTestsPositiveRegistrationRA extends TestBaseRA{
 //                .assertThat().statusCode(200);
 //    }
 
-
-
-    @AfterMethod
-    @Test
-    public static void postConditionRA() throws SQLException {
+  @AfterMethod
+   public static void postConditionRA() throws SQLException {
         String[] args = {"nata@gmail.com"};
-        deleteUser.deleteUserFromDB1(args);
+        deleteUser.deleteUserFromDB(args);
     }
-
-    //@AfterMethod
-//    public static void postConditionRA2() throws SQLException { //второй вариант, но не удаляющий юзера в БД с таблицы "confirmation_code"
-//        String[] args = {"nata@gmail.com"};
-//        deleteUser.deleteUserFromDB(args);
-//    }
-
  }

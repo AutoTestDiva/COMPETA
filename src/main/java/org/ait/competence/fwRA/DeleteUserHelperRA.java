@@ -1,11 +1,9 @@
 package org.ait.competence.fwRA;
 
 import lombok.var;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-
 import static org.ait.competence.DataBaseRA.connection;
 
 public class DeleteUserHelperRA extends BaseHelperRA {
@@ -80,17 +78,10 @@ public class DeleteUserHelperRA extends BaseHelperRA {
         String email = args[0];
         deleteUser(email);
         deleteUserByEmail(email);
-        deleteUserUserById(email);
+        deleteUserUserById1(email);
     }
 
-    public static void deleteUserFromDB1(String[] args) throws SQLException {
-        String email = args[0];
-        deleteUser(email);
-        deleteUserByEmail(email);
-        deleteUserUserById2(email);
-    }
-
-    public static void deleteUserUserById2(String email) throws SQLException {
+    public static void deleteUserUserById1(String email) throws SQLException {
         String userId = UserHelperRA.getUserIdByEmail(email);
         if (userId != null) {
             db.requestDelete("DELETE FROM confirmation_code WHERE user_id = " + userId + ";");

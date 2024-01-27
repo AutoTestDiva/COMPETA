@@ -60,6 +60,7 @@ public class UserTestsRA extends TestBaseRA{
                 .assertThat().statusCode(401);
     }
 
+
     @AfterMethod
     public static void postConditionRA() throws SQLException {
         String[] args = {"nata@gmail.com"};

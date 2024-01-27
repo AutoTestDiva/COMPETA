@@ -44,4 +44,6 @@ public class UserProfileControllerTestsRA extends TestBaseRA {
                 .then()
                 .assertThat().statusCode(200);
     }
+
+
 }
