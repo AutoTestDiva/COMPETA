@@ -3,8 +3,13 @@ package org.ait.competence.fwRA;
 import io.restassured.http.ContentType;
 import io.restassured.http.Cookie;
 import io.restassured.response.Response;
+import io.restassured.response.Validatable;
+import io.restassured.specification.ResponseSpecification;
 import org.ait.competence.dto.NewUserDto;
 import org.ait.competence.dto.ResetUserPasswordDto;
+import org.ait.competence.dto.UpdateSoftSkillNameDto;
+import org.hamcrest.Condition;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.sql.SQLException;
@@ -39,7 +44,14 @@ public class UserHelperRA extends BaseHelperRA {
                 .body(loginDataEncoded(email, password))
                 .when()
                 .post("/api/login");
-        return response.getDetailedCookie("JSESSIONID");
+       // return response.getDetailedCookie("JSESSIONID");
+
+        if (response.getStatusCode() == 200) {
+            return response.getDetailedCookie("JSESSIONID");
+        } else {
+            System.out.println("Authentication failed. Status code: " + response.getStatusCode());
+            return null;
+        }
     }
 
     public Response registerUser(String email, String password) {
@@ -75,4 +87,6 @@ public class UserHelperRA extends BaseHelperRA {
         }
         return userId;
     }
-}
+
+    }
+
