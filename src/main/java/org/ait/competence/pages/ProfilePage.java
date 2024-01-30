@@ -14,12 +14,4 @@ public class ProfilePage extends BasePage {
         super(driver);
     }
 
-    @FindBy(xpath = "//p[text()='Registered since:']")
-    WebElement registrationDateText;
-
-    public ProfilePage verifyRegisteredSinceText(String text) {
-        Assert.assertTrue(shouldHaveText(registrationDateText, text, 10));
-        return this;
-    }
-
 }

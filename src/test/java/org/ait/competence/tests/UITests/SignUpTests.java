@@ -1,19 +1,16 @@
 package org.ait.competence.tests.UITests;
 
 import org.ait.competence.pages.HomePage;
-import org.ait.competence.pages.LandingPage;
-import org.ait.competence.pages.LogInPage;
 import org.ait.competence.pages.SignUpPage;
-import org.ait.competence.tests.UITests.TestBase;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.JavascriptExecutor;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 public class SignUpTests extends TestBase {
     @BeforeMethod
     public void precondition() {
-        new HomePage(driver).selectSignUp();
+        JavascriptExecutor js = null;
+        new HomePage(driver, js).selectSignUp();
     }
 
     @Test
