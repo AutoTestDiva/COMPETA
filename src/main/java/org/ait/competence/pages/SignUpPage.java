@@ -1,15 +1,11 @@
 package org.ait.competence.pages;
 
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
-import java.time.Duration;
 
 public class SignUpPage extends BasePage {
-
     public SignUpPage(WebDriver driver) {
         super(driver);
     }
@@ -31,7 +27,8 @@ public class SignUpPage extends BasePage {
         type(passwordField, password);
         type(repeatPasswordField, repeatPassword);
         click(registerButton);
-        return new HomePage(driver);
+        JavascriptExecutor js = null;
+        return new HomePage(driver, js);
     }
 
     public SignUpPage signUpNegative(String email, String password, String repeatPassword) {
