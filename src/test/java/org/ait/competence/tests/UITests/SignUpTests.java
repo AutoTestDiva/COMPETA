@@ -9,7 +9,7 @@ import org.testng.annotations.Test;
 public class SignUpTests extends TestBase {
     @BeforeMethod
     public void precondition() {
-        JavascriptExecutor js = null;
+        JavascriptExecutor js = (JavascriptExecutor) driver;
         new HomePage(driver, js).selectSignUp();
     }
 

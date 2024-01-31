@@ -4,8 +4,6 @@ import org.ait.competence.pages.HomePage;
 import org.ait.competence.pages.LandingPage;
 import org.ait.competence.pages.LogInPage;
 import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.FindBy;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -13,7 +11,8 @@ public class ProfilePageTests extends TestBase{
 
     @BeforeMethod
     public void precondition() {
-        new LandingPage(driver).selectLogIn();
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        new LandingPage(driver, js).selectLogIn();
         new LogInPage(driver).logIn("Student33@gmail.com", "Qwerty007!");
     }
 

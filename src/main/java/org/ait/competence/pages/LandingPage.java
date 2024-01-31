@@ -1,12 +1,18 @@
 package org.ait.competence.pages;
 
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import org.testng.Assert;
 
 public class LandingPage extends BasePage {
-    public LandingPage(WebDriver driver) {
+
+    private final JavascriptExecutor js;
+
+    public LandingPage(WebDriver driver, JavascriptExecutor js) {
         super(driver);
+        this.js = js;
     }
 
     @FindBy(xpath = "//header/div[1]/button[1]")
@@ -16,7 +22,7 @@ public class LandingPage extends BasePage {
         click(logInButton);
 
         try {
-            Thread.sleep(5000); // Подождать 5 секунд
+            Thread.sleep(5000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
