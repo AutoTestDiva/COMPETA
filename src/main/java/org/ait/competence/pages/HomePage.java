@@ -34,8 +34,8 @@ public class HomePage extends BasePage {
         return new SignUpPage(driver);
     }
 
-    @FindBy(xpath = "//header/div[1]/button[1]")
-    WebElement logOutBtn;
+    @FindBy(xpath = "//button[contains(@class, 'MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textInherit MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorInherit MuiButton-root MuiButton-text MuiButton-textInherit MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorInherit css-1y942vo-MuiButtonBase-root-MuiButton-root')]")
+    public WebElement logOutBtn;
 
     public HomePage verifyLogOutBtnIsPresent() {
         Assert.assertTrue(isElementPresent(logOutBtn, 10));
@@ -96,6 +96,12 @@ public class HomePage extends BasePage {
     public ProfilePage verifyRegisteredSinceIsPresent(String text) {
         Assert.assertTrue(shouldHaveText(registrationDateText, text, 10));
         return new ProfilePage(driver);
+    }
+
+    public HomePage selectLogOut() {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        wait.until(ExpectedConditions.elementToBeClickable(logOutBtn)).click();
+        return this;
     }
 
 }
