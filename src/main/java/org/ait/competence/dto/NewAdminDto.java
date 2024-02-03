@@ -1,15 +1,19 @@
 package org.ait.competence.dto;
 
-
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-@Setter
 @Getter
+@Setter
 @ToString
 @Builder
-public class UserResponseDto {
-    private String message;
+public class NewAdminDto {
+    private String email;
+    private String password;
+    private String nickName;
+
 }
+
+

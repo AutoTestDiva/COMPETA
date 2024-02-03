@@ -33,6 +33,28 @@ public class DataBaseRA {
             return null;
         }
     }
+
+    public static ResultSet executeQuery(String query) {
+        try {
+            Connection connection = DataBaseRA.connection();
+            Statement statement = connection.createStatement();
+            return statement.executeQuery(query);
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+            return null;
+        }
+    }
+
+
+    public static void executeUpdate(String query) {
+        try (Connection connection = DataBaseRA.connection();
+             Statement statement = connection.createStatement()) {
+            statement.executeUpdate(query);
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+        }
+    }
+
     public static boolean execute(String query) {
         try {
             return DataBaseRA.connection().createStatement().execute(query);

@@ -9,9 +9,11 @@ import lombok.ToString;
 @Setter
 @ToString
 @Builder
-public class NewUserDto {
-    private String email;
-    private String password;
+public class UserDetailsDto {
     private String nickName;
+    private String firstName;
+    private String lastName;
+    private String email;
+   // private String roles;
 
 }

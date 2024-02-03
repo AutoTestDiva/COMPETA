@@ -2,6 +2,7 @@ package org.ait.competence.tests.restAssuredTests;
 
 import io.restassured.RestAssured;
 import org.ait.competence.DataBaseRA;
+import org.ait.competence.fwRA.AdminHelperRA;
 import org.ait.competence.fwRA.DeleteUserHelperRA;
 import org.ait.competence.fwRA.UserHelperRA;
 import org.slf4j.Logger;
@@ -16,6 +17,8 @@ public class TestBaseRA {
     final static Logger logger = LoggerFactory.getLogger(TestBaseRA.class);
     protected static DataBaseRA db;
     protected static UserHelperRA user = new UserHelperRA();
+    protected static AdminHelperRA admin = new AdminHelperRA();
+
     protected static DeleteUserHelperRA deleteUser = new DeleteUserHelperRA();
     @BeforeMethod
     public void preconditionRA(Method method, Object[] parameters){

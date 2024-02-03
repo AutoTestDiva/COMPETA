@@ -1,0 +1,40 @@
+ e-mail: admin1@gmail.com
+ password: Admin001!
+ nick_name: superAdmin1
+ user_status: CONFIRMED
+
+
+  e-mail: admin2@gmail.com
+  password: Admin002!
+  nick_name: superAdmin2
+  user_status: CONFIRMED
+
+
+  e-mail: user1@gmail.com
+  password: User001!
+  nick_name: superUser1
+  user_status: CONFIRMED
+  firstName("Morgan")
+  lastName("Freeman")
+  email("user1@gmail.com")
+
+
+  e-mail: user2@gmail.com
+  password: User002!
+  nick_name: superUser2
+  user_status: CONFIRMED
+
+
+    nickName: superUser3
+    firstName: Jack
+    lastName: Nickolson
+    email: user3@gmail.com
+    roles: ROLE_USER
+        password: User003!
+        user_status: CONFIRMED
+
+
+  e-mail: 0
+  password: User000!
+  nick_name: superUser0
+  user_status: BANNED
