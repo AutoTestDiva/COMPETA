@@ -23,7 +23,6 @@ public class TestBaseRA {
     @BeforeMethod
     public void preconditionRA(Method method, Object[] parameters){
         RestAssured.baseURI = "http://localhost:5173";
-        // RestAssured.basePath = "api";
         logger.info("Start test " + method.getName() + " with parameters " + Arrays.asList(parameters));
     }
 

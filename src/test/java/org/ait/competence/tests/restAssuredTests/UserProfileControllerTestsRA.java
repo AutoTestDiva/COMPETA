@@ -5,23 +5,24 @@ import org.ait.competence.dto.PutUserProfileDto;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
 import java.sql.SQLException;
+
 import static io.restassured.RestAssured.given;
 
 public class UserProfileControllerTestsRA extends TestBaseRA {
     private Cookie cookie;
-    String userId;
 
     @BeforeMethod
     public void preconditionRA() throws SQLException {
-        // Регистрируем пользователя
+        // Registering a user:
         user.registerUser("user1@gmail.com", "User001!", "superUser1");
-        user.userStatusConfirmed("user1@gmail.com"); //меняет статус на CONFIRMED в 2-х таблицах БД users, users_aud
+        user.userStatusConfirmed("user1@gmail.com"); //changes the status to CONFIRMED in 2 database tables users, users_aud
         cookie = user.getLoginCookie("user1@gmail.com", "User001!");
     }
 
     @Test
-    public void getUserProfilePositiveTestRA() throws SQLException {
+    public void getUserProfile_code200_TestRA() throws SQLException {
         String userId = user.getUserIdByEmail("user1@gmail.com");
         given().cookie(cookie).when().get("/api/user-profile/" + userId)
                 .then()
@@ -29,7 +30,7 @@ public class UserProfileControllerTestsRA extends TestBaseRA {
     }
 
     @Test
-    public void putUserProfilePositiveTestRA () throws SQLException {
+    public void putUserProfile_code200_TestRA() throws SQLException {
         String userId = user.getUserIdByEmail("user1@gmail.com");
         PutUserProfileDto userProfile = PutUserProfileDto.builder()
                 .nickName("superUser1")
@@ -41,14 +42,14 @@ public class UserProfileControllerTestsRA extends TestBaseRA {
                 .cookie(cookie)
                 .contentType("application/json")
                 .body(userProfile)
-                . when()
+                .when()
                 .put("/api/user-profile/" + userId)
                 .then()
                 .assertThat().statusCode(200);
     }
 
     @AfterMethod
-     public static void postConditionRA() throws SQLException {
+    public static void postConditionRA() throws SQLException {
         String[] args = {"user1@gmail.com"};
         deleteUser.deleteUserFromDB(args);
     }

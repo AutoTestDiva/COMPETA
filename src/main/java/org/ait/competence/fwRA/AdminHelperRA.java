@@ -44,17 +44,11 @@ public class AdminHelperRA extends BaseHelperRA {
     public void adminRole(String email) {//меняет статус на CONFIRMED в 2-х таблицах БД users, users_aud
         try {
             String userId = getAdminIdByEmail(email);
-           // if (userId != null) {
-                db.executeUpdate("UPDATE users_roles SET roles_id = 2 WHERE users_id  = '" + userId + "';");
-//            } else {
-//                System.out.println("Admin not found");
-//            }
+                    db.executeUpdate("UPDATE users_roles SET roles_id = 2 WHERE users_id  = '" + userId + "';");
         } catch (SQLException e) {
             e.printStackTrace();
         }
-//                db.executeUpdate("UPDATE users_roles SET roles_id = 2 WHERE users_id  = '" + userId + "';");
-//        } catch (SQLException e) {
-//                e.printStackTrace();
+
     }
 
     public static String getAdminIdByEmail(String email) throws SQLException {
@@ -88,7 +82,9 @@ public class AdminHelperRA extends BaseHelperRA {
         String softSkillId;
         try {
             softSkillId = db.requestSelect("SELECT id FROM soft_skill WHERE name = '" + name + "';")
-                    .getString(1); // Используйте название колонки вместо индекса
+
+                    .getString(1);
+
         } catch (SQLException e) {
             softSkillId = null;
             System.out.println("The name is not found" + e);
@@ -100,11 +96,35 @@ public class AdminHelperRA extends BaseHelperRA {
         String professionId;
         try {
             professionId = db.requestSelect("SELECT id FROM profession WHERE name = '" + name + "';")
-                    .getString(1); // Используйте название колонки вместо индекса
+                    .getString(1);
         } catch (SQLException e) {
             professionId = null;
             System.out.println("The name is not found" + e);
         }
         return professionId;
     }
-}
+
+    public String getJobTitleIdById(String name) {
+        String jobTitleId;
+        try {
+            jobTitleId = db.requestSelect("SELECT id FROM job_title WHERE name = '" + name + "';")
+                    .getString(1);
+        } catch (SQLException e) {
+            jobTitleId = null;
+            System.out.println("The name is not found" + e);
+        }
+        return jobTitleId;
+    }
+
+    public String getIndustryById(String name) {
+        String industryId;
+            try {
+                industryId = db.requestSelect("SELECT id FROM industry WHERE name = '" + name + "';")
+                        .getString(1);
+            } catch (SQLException e) {
+                industryId = null;
+                System.out.println("The name is not found" + e);
+            }
+            return industryId;
+        }
+    }

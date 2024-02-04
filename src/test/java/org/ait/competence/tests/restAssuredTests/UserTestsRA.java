@@ -14,13 +14,15 @@ public class UserTestsRA extends TestBaseRA{
     private Cookie cookie;
     @BeforeMethod
     public void preconditionRA() throws SQLException {
-        // Регистрируем пользователя
+
+        // Registering a user:
         user.registerUser("user2@gmail.com", "User002!", "superUser2");
-        user.userStatusConfirmed("user2@gmail.com"); //меняет статус на CONFIRMED в 2-х таблицах БД users, users_aud
+        user.userStatusConfirmed("user2@gmail.com"); //changes the status to CONFIRMED in 2 database tables users, users_aud
         cookie = user.getLoginCookie("user2@gmail.com", "User002!");
     }
     @Test
-    public void putResetUserPasswordPositiveTestRA1() {
+    public void putUserPasswordReset_code200_TestRA1() { //Password Reset Successful
+
        ResetUserPasswordDto resetUserPassword= ResetUserPasswordDto.builder()
                 .oldPassword("User002!")
                 .newPassword("NewPassword002!")
@@ -35,7 +37,9 @@ public class UserTestsRA extends TestBaseRA{
                 .assertThat().statusCode(200);
     }
     @Test
-    public void putNewPasswordEqualsOldTestRA1() {
+
+    public void putNewPasswordEqualsOld_code400_TestRA1() { //Validation errors
+
         ResetUserPasswordDto resetUserPassword= ResetUserPasswordDto.builder()
                 .oldPassword("User002!")
                 .newPassword("User002!")
@@ -51,7 +55,9 @@ public class UserTestsRA extends TestBaseRA{
     }
 
     @Test
-    public void putUserNotAuthenticatedTestRA1() {
+
+    public void putUserNotAuthenticated_code401_TestRA1() { //User not authenticated
+
        ResetUserPasswordDto resetUserPassword= ResetUserPasswordDto.builder()
                 .oldPassword("User002!")
                 .newPassword("NewPassword002!")
@@ -65,7 +71,9 @@ public class UserTestsRA extends TestBaseRA{
                 .assertThat().statusCode(401);
     }
     @Test
-    public void getProfilePositiveTestRA(){
+
+    public void getUserProfile_code200_TestRA(){ //User Profile
+
         given().contentType(ContentType.JSON).cookie(cookie).when().get("/api/user/me")
                 .then()
                 .assertThat().statusCode(200)
@@ -73,14 +81,17 @@ public class UserTestsRA extends TestBaseRA{
 
     }
     @Test
-    public void getProfileNotAuthenticatedUserTestRA(){
+    public void getUserProfileNotAuthenticated_code401_TestRA(){ //User not authenticated
+
         given().contentType(ContentType.JSON).when().get("/api/user/me")
                 .then()
                 .assertThat().statusCode(401);
     }
 
     @Test
-    public void getUserConfirmCode_200_TestRA() throws SQLException {//
+
+    public void getUserConfirmCode_200_TestRA() throws SQLException {//email was confirm
+
         String userId = user.getUserIdByEmail("user2@gmail.com");
         String userConfirmCode = user.getUserConfirmCodeById(userId);
         given().cookie(cookie).contentType(ContentType.JSON).when().get("/api/user/email-confirmation/" + userConfirmCode)
@@ -90,10 +101,13 @@ public class UserTestsRA extends TestBaseRA{
 
         //метод,  меняющий в таблице в БД confirmation_code в графе is_used 1 на 0,
         // т.е. чтоб CODE будто ранее не использовался
+        //method that changes confirmation_code in the is_used column of the table in the database from 1 to 0,
+        // i.e. so that the CODE is not used before
         user.cleanupDatabase("user2@gmail.com");
     }
     @Test
-    public void getUserConfirmCode_404_TestRA() throws SQLException {
+    public void getUserConfirmCode_404_TestRA() throws SQLException { //User with this code not found
+
         String userId = user.getUserIdByEmail("invalid@gmail.com");
         String userConfirmCode = user.getUserConfirmCodeById(userId);
         given().cookie(cookie).contentType(ContentType.JSON).when().get("/api/user/email-confirmation/" + userConfirmCode)
@@ -102,7 +116,8 @@ public class UserTestsRA extends TestBaseRA{
     }
 
     @Test
-    public void getUserConfirmCode_409_TestRA() throws SQLException {
+    public void getUserConfirmCode_409_TestRA() throws SQLException {//This code was used, please make new code
+
         String userId = user.getUserIdByEmail("user2@gmail.com");
         String userConfirmCode = user.getUserConfirmCodeById(userId);
         given().cookie(cookie).contentType(ContentType.JSON).when().get("/api/user/email-confirmation/" + userConfirmCode);
@@ -110,8 +125,6 @@ public class UserTestsRA extends TestBaseRA{
                 .then()
                 .assertThat().statusCode(409);
     }
-
-
     @AfterMethod
     public static void postConditionRA() throws SQLException {
         String[] args = {"user2@gmail.com"};
