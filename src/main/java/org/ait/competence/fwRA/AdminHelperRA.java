@@ -95,4 +95,16 @@ public class AdminHelperRA extends BaseHelperRA {
         }
         return softSkillId;
     }
+
+    public String getProfessionById(String name) throws SQLException {
+        String professionId;
+        try {
+            professionId = db.requestSelect("SELECT id FROM profession WHERE name = '" + name + "';")
+                    .getString(1); // Используйте название колонки вместо индекса
+        } catch (SQLException e) {
+            professionId = null;
+            System.out.println("The name is not found" + e);
+        }
+        return professionId;
+    }
 }

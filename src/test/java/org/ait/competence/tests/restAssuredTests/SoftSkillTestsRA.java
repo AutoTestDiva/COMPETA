@@ -404,12 +404,10 @@ public class SoftSkillTestsRA extends TestBaseRA {
         given().cookie(cookie).contentType(ContentType.JSON).when().delete("/api/soft-skill/" + softSkillId);
     }*/
 
-
       @AfterMethod
        public static void postConditionRA() throws SQLException {
         String[] args = {"admin1@gmail.com"};
         deleteUser.deleteUserFromDB(args);
     }
-  
 }
 
