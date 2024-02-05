@@ -25,7 +25,7 @@ public class EduLevelTestsRA extends TestBaseRA{
     public void postAddNewEduLevel_code201_TestRA1() throws SQLException { //Education level added
         cookie = user.getLoginCookie("admin1@gmail.com", "Admin001!");
         PostAddNewEduLevelDto postAddNewEduLevel = PostAddNewEduLevelDto.builder()
-                .name("higher education11")
+                .name("higher education13")
                 .build();
         given()
                 .cookie(cookie)
@@ -39,7 +39,7 @@ public class EduLevelTestsRA extends TestBaseRA{
         System.out.println(postAddNewEduLevel.getName());
 
         // The variant of deleting an already existing eduLevel (not through the database):
-        String eduLevelId = admin.getEduLevelById("higher education");
+        String eduLevelId = admin.getEduLevelById("higher education13");
         given().cookie(cookie).contentType(ContentType.JSON).when().delete("/api/edu-level/" + eduLevelId);
     }
 
@@ -194,7 +194,7 @@ public class EduLevelTestsRA extends TestBaseRA{
         //With this method we try to update an already existing edu-level with the same name:
         String eduLevelId = admin.getEduLevelById("higher education");
         UpdateEduLevelDto updateEduLevelDto = UpdateEduLevelDto.builder()
-                .name("school education").build();
+                .name("higher education").build();
         given().cookie(cookie).contentType(ContentType.JSON).body(updateEduLevelDto).when().put("/api/edu-level/" + eduLevelId)
                 .then()
                 .log().all()
