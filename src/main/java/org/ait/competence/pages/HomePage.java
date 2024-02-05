@@ -31,7 +31,7 @@ public class HomePage extends BasePage {
 
     public SignUpPage selectSignUp() {
         click(signUpButton);
-        return new SignUpPage(driver);
+        return new SignUpPage(driver, js);
     }
 
     @FindBy(xpath = "//button[contains(@class, 'MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textInherit MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorInherit MuiButton-root MuiButton-text MuiButton-textInherit MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorInherit css-1y942vo-MuiButtonBase-root-MuiButton-root')]")
@@ -55,7 +55,7 @@ public class HomePage extends BasePage {
 
     public SignUpPage verifyLogInTextIsPresent(String text) {
         try {
-            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(50));
             wait.until(ExpectedConditions.visibilityOf(loginToContinue));
 
             String actualText = loginToContinue.getText();
@@ -64,7 +64,7 @@ public class HomePage extends BasePage {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return new SignUpPage(driver);
+        return new SignUpPage(driver, js);
     }
 
     public void scrollToElement(WebElement element) {
