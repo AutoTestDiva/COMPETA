@@ -16,7 +16,7 @@ public class LogInTests extends TestBase {
     @Test
     public void logInPositiveTest() {
         new LogInPage(driver)
-                .logIn("Student1@gmail.com", "Qwerty007!")
+                .logIn("Student33@gmail.com", "Qwerty007!")
                 .verifyLogOutBtnIsPresent();
     }
 

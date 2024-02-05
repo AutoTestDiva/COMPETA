@@ -14,10 +14,12 @@ import java.time.Duration;
 
 public class LogOutTest extends TestBase {
 
-    private JavascriptExecutor js;
+    //private JavascriptExecutor js;
 
     @BeforeMethod
     public void precondition() {
+        JavascriptExecutor js;
+        //JavascriptExecutor js = (JavascriptExecutor) driver;
         js = (JavascriptExecutor) driver;
         new LandingPage(driver, js).selectLogIn();
         new LogInPage(driver).logIn("Student33@gmail.com", "Qwerty007!");
@@ -29,7 +31,7 @@ public class LogOutTest extends TestBase {
 
     @Test
     public void logOutTest() {
-        //JavascriptExecutor js = (JavascriptExecutor) driver;
+        JavascriptExecutor js = (JavascriptExecutor) driver;
         HomePage homePage = new HomePage(driver, js);
         homePage.selectLogOut()
          .verifyLogInTextIsPresent("Log in to continue");

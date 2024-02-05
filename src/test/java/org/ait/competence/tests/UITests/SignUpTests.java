@@ -15,15 +15,16 @@ public class SignUpTests extends TestBase {
 
     @Test
     public void SignUpPositiveTest() {
-        new SignUpPage(driver).signUp("student23@gmail.com", "Qwerty007!",
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        new SignUpPage(driver, js).signUp("Will","Student52@gmail.com", "Qwerty007!",
                         "Qwerty007!")
-                //.isLogInPageOpen("Log in to continue");
                 .verifyLogInTextIsPresent("Log in to continue");
     }
 
     @Test
     public void SignUpNegativeTest() {
-        new SignUpPage(driver).signUpNegative("student1@gmail.com", "Qwerty007!",
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        new SignUpPage(driver, js).signUpNegative("Will","Student52@gmail.com", "Qwerty007!",
                         "Qwerty007!")
                 .verifyUserExistsMessageIsPresent();
     }
