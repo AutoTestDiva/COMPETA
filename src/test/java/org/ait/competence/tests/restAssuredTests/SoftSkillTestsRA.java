@@ -68,6 +68,10 @@ public class SoftSkillTestsRA extends TestBaseRA {
     public void postAddSoftSkill_WithInvalidEmail_code401_TestRA1() throws SQLException { //User not authenticated
         cookie = user.getLoginCookie("invalid@gmail.com", "Admin001!"); //enter wrong mail
         if (cookie != null) {
+            //It's like a precondition by which we invest a skill in advance:
+            PostAllSoftSkillDto postAllSoftSkill = PostAllSoftSkillDto.builder()
+                    .name("team work10").build();
+            given().cookie(cookie).contentType(ContentType.JSON).body(postAllSoftSkill).when().post("/api/soft-skill");
             given().cookie(cookie).contentType(ContentType.JSON).when().post("/api/soft-skill")
                     .then()
                     .assertThat().statusCode(401);

@@ -57,6 +57,10 @@ public class EduLevelTestsRA extends TestBaseRA{
     public void postAddNewEduLevel_WithInvalidEmail_code401_TestRA1() throws SQLException { //User not authenticated
         cookie = user.getLoginCookie("invalid@gmail.com", "Admin001!"); //enter the wrong mail
         if (cookie != null) {
+            //It's like a precondition that we put in beforehand:
+            PostAddNewEduLevelDto postAddNewEduLevel = PostAddNewEduLevelDto.builder()
+                    .name("higher education").build();
+            given().cookie(cookie).contentType(ContentType.JSON).body(postAddNewEduLevel).when().post("/api/edu-level");
             given().cookie(cookie).contentType(ContentType.JSON).when().post("/api/edu-level")
                     .then().log().all()
                     .assertThat().statusCode(401);
@@ -64,25 +68,6 @@ public class EduLevelTestsRA extends TestBaseRA{
            System.out.println("Authentication failed. Cannot proceed with the test.");
         }
     }
-/* @Test
-    public void postAddNewEduLevel_code403_TestRA() throws SQLException { // Access denied for user with email <{0}> and role {1}
-                                                                            //не работает, т.к. не воспринимает с БД роль пользователя "BANNED"
-        admin.registerAdmin("admin0@gmail.com", "Admin000!", "superAdmin0");
-        admin.adminStatusBanned("admin0@gmail.com"); //changes the status to CONFIRMED in 2 database tables users, users_aud
-        admin.adminRole("admin0@gmail.com"); //assign the ADMIN role in the database
-        cookie = user.getLoginCookie("admin0@gmail.com", "Admin000!");
-         if (cookie != null) {
-                //This is like a precondition, by which we enter the edu-level in advance:
-               PostAddNewEduLevelDto postAddNewEduLevel = PostAddNewEduLevelDto.builder()
-                .name("higher education").build();
-        given().cookie(cookie).contentType("application/json").body(postAddNewEduLevel).when().post("/api/edu-level")
-                .then().log().all().assertThat().statusCode(403);
-        System.out.println(postAddNewEduLevel.getName());
-            } else {
-                // Handling the case when authentication fails
-                System.out.println("User not authenticated");
-            }
-    }*/
 
     @Test()
     public void postAddNewEduLevel_code409_TestRA1() throws SQLException {//EduLevel with that name already exists
@@ -171,38 +156,6 @@ public class EduLevelTestsRA extends TestBaseRA{
         String name = "higher education";
         db.executeUpdate("DELETE FROM `edu_level` WHERE `name` = '" + name + "';");
     }
-
- /*@Test
-         public void putUpdateEduLevelById_AccessDenied_code403_TestRA() throws SQLException {//Access denied for user with email <{0}> and role {1}
-         // не работает, т.к. не воспринимает с БД роль пользователя "BANNED"
-            //вместо предусловия выше, т.к. регистрация с другими параметрами:
-             admin.registerAdmin("admin0@gmail.com", "Admin000!", "superAdmin0");
-             admin.adminStatusBanned("admin0@gmail.com"); //меняет статус на BANNED в 2-х таблицах БД users, users_aud
-             admin.adminRole("admin0@gmail.com"); //присваиваем в базе данных роль АДМИНА
-             cookie = user.getLoginCookie("admin0@gmail.com", "Admin000!");
-
-             if (cookie != null) {
-                 //It's like a precondition that we put in beforehand:
-                 PostAddNewEduLevelDto postAddNewEduLevel = PostAddNewEduLevelDto.builder()
-                         .name("higher education").build();
-                 given().cookie(cookie).contentType(ContentType.JSON).body(postAddNewEduLevel).when().post("/api/edu-level");
-
-                 //Using this method, try to update an existing industry with an incorrect edu-level in cookies:
-                 String eduLevelId = admin.getEduLevelById("higher education");
-                 UpdateEduLevelDto updateEduLevelDto = UpdateEduLevelDto.builder()
-                         .name("school education").build();
-                 given().cookie(cookie).contentType(ContentType.JSON).body(updateEduLevelDto).when().put("/api/edu-level/" + eduLevelId)
-                         .then()
-                         .log().all()
-                         .assertThat().statusCode(403);
-             } else {
-                System.out.println("User not authenticated");
-             }
-       // deleting an already existing edu-level:
-       String name = "education1";
-       db.executeUpdate("DELETE FROM `edu_level` WHERE `name` = '" + name + "';");
-   }*/
-
     @Test
     public void putUpdateEduLevelById_code404_TestRA() throws SQLException { //Education level not found
         cookie = user.getLoginCookie("admin1@gmail.com", "Admin001!");
@@ -325,35 +278,6 @@ public class EduLevelTestsRA extends TestBaseRA{
             System.out.println("Authentication failed. Cannot proceed with the test.");
         }
     }
-/*
-  @Test
-    public void deleteEduLevelById_code403_TestRA() throws SQLException { // не работает, т.к. не воспринимает с БД роль пользователя "BANNED"
-        //вместо предусловия выше, т.к. регистрация с другими параметрами:
-        admin.registerAdmin("admin0@gmail.com", "Admin000!", "superAdmin0");
-        admin.adminStatusBanned("admin0@gmail.com"); //меняет статус на BANNED в 2-х таблицах БД users, users_aud
-        admin.adminRole("admin0@gmail.com"); //присваиваем в базе данных роль АДМИНА
-        cookie = user.getLoginCookie("admin0@gmail.com", "Admin000!");
-
-        if (cookie != null) {
-            //It's like a precondition by which we initially invest the edu-level:
-            PostAddNewEduLevelDto postAddNewEduLevel = PostAddNewEduLevelDto.builder()
-                    .name("higher education").build();
-            given().cookie(cookie).contentType(ContentType.JSON).body(postAddNewEduLevel).when().post("/api/edu-level");
-
-            //With this method we delete an already existing  edu-level:
-            String eduLevelId = admin.getEduLevelById("higher education");
-            given().cookie(cookie).contentType(ContentType.JSON).when().delete("/api/edu-level/" + eduLevelId)
-                    .then()
-                    .log().all()
-                    .assertThat().statusCode(403);
-          } else {
-             System.out.println("Authentication failed. Cannot proceed with the test.");
-        }
-      // The variant of deleting an already existing eduLevel (not through the database):
-      String eduLevelId = admin.getEduLevelById("higher education");
-      given().cookie(cookie).contentType(ContentType.JSON).when().delete("/api/edu-level/" + eduLevelId);
-  }*/
-
     @Test
     public void deleteEduLevelById_code404_TestRA() throws SQLException { //Education level not found
         cookie = user.getLoginCookie("admin1@gmail.com", "Admin001!");

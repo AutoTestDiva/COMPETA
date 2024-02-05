@@ -41,7 +41,7 @@ public class AdminHelperRA extends BaseHelperRA {
         }
     }
 
-    public void adminRole(String email) {//меняет статус на CONFIRMED в 2-х таблицах БД users, users_aud
+    public void adminRole(String email) {//меняет статус на CONFIRMED в  таблице БД users_roles
         try {
             String userId = getAdminIdByEmail(email);
                     db.executeUpdate("UPDATE users_roles SET roles_id = 2 WHERE users_id  = '" + userId + "';");
@@ -151,4 +151,18 @@ public class AdminHelperRA extends BaseHelperRA {
         }
         return hardSkillId;
     }
+
+    public String getDriverLicenceById(String name) {
+        String driverLicenceId;
+        try {
+            driverLicenceId = db.requestSelect("SELECT id FROM driver_licence WHERE name = '" + name + "';")
+                    .getString(1);
+        } catch (SQLException e) {
+            driverLicenceId = null;
+            System.out.println("The name is not found" + e);
+        }
+        return driverLicenceId;
+    }
+
+
 }

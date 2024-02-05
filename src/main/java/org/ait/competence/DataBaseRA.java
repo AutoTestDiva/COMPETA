@@ -45,7 +45,6 @@ public class DataBaseRA {
         }
     }
 
-
     public static void executeUpdate(String query) {
         try (Connection connection = DataBaseRA.connection();
              Statement statement = connection.createStatement()) {
@@ -55,7 +54,7 @@ public class DataBaseRA {
         }
     }
 
-    public static boolean execute(String query) {
+   public static boolean execute(String query) {
         try {
             return DataBaseRA.connection().createStatement().execute(query);
         } catch (SQLException e) {

@@ -8,11 +8,13 @@ import org.ait.competence.dto.NewUserDto;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.sql.SQLException;
+
 import static io.restassured.RestAssured.given;
 
 public class UserHelperRA extends BaseHelperRA {
     public UserHelperRA() {
     }
+
     public static String loginDataEncoded(String email, String password) {
         String encodedMail;
         String encodedPassword;
@@ -20,7 +22,6 @@ public class UserHelperRA extends BaseHelperRA {
         try {
             encodedMail = URLEncoder.encode(email, "UTF-8");
             encodedPassword = URLEncoder.encode(password, "UTF-8");
-
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }
@@ -34,13 +35,14 @@ public class UserHelperRA extends BaseHelperRA {
                 .when()
                 .post("/api/login");
     }
+
     public Cookie getLoginCookie(String email, String password) {
         Response response = given()
                 .contentType(ContentType.fromContentType("application/x-www-form-urlencoded"))
                 .body(loginDataEncoded(email, password))
                 .when()
                 .post("/api/login");
-       // return response.getDetailedCookie("JSESSIONID");
+        // return response.getDetailedCookie("JSESSIONID");
 
         if (response.getStatusCode() == 200) {
             return response.getDetailedCookie("JSESSIONID");
@@ -50,9 +52,8 @@ public class UserHelperRA extends BaseHelperRA {
         }
     }
 
-
     public Response registerUser(String email, String password, String nickName) {
-       NewUserDto user = NewUserDto.builder()
+        NewUserDto user = NewUserDto.builder()
                 .email(email)
                 .password(password)
                 .nickName(nickName)
@@ -76,7 +77,6 @@ public class UserHelperRA extends BaseHelperRA {
         return userId;
     }
 
-
     public String getUserConfirmCodeById(String userId) throws SQLException {
         String userConfirmCode;
         try {
@@ -89,10 +89,8 @@ public class UserHelperRA extends BaseHelperRA {
         return userConfirmCode;
     }
 
-
     public void cleanupDatabase(String email) { //метод,  меняющий в таблице в БД confirmation_code в графе is_used 1 на 0, т.е. чтоб CODE будто ранее не использовался
-        // код для обновления значений в базе данных
-        // например, сброс значения is_used обратно на 0
+        // код для обновления значений в базе данных; например, сброс значения is_used обратно на 0
         // и очистка других данных, если необходимо
         try {
             String userId = getUserIdByEmail(email);
@@ -116,5 +114,12 @@ public class UserHelperRA extends BaseHelperRA {
         }
     }
 
-
+    public void userRole(String email) {//меняет статус на CONFIRMED в 2-х таблицах БД users, users_aud
+        try {
+            String userId = getUserIdByEmail(email);
+            db.executeUpdate("UPDATE users_roles SET roles_id = 1 WHERE users_id  = '" + userId + "';");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }

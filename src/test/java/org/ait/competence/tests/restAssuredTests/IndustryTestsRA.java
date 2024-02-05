@@ -66,6 +66,10 @@ public class IndustryTestsRA extends TestBaseRA {
     public void postAddNewIndustry_WithInvalidEmail_code401_TestRA1() throws SQLException { //User not authenticated
         cookie = user.getLoginCookie("invalid@gmail.com", "Admin001!"); //сделать ошибку в почте
         if (cookie != null) {
+            //It's like a precondition that we put in beforehand:
+            PostIndustryDto postIndustry = PostIndustryDto.builder()
+                    .name("education1").build();
+            given().cookie(cookie).contentType(ContentType.JSON).body(postIndustry).when().post("/api/industry");
             given().cookie(cookie).contentType(ContentType.JSON).when().post("/api/industry")
                     .then()
                     .assertThat().statusCode(401);
@@ -79,24 +83,28 @@ public class IndustryTestsRA extends TestBaseRA {
           admin.adminStatusBanned("admin0@gmail.com"); //меняет статус на BANNED в 2-х таблицах БД users, users_aud
           admin.adminRole("admin0@gmail.com"); //присваиваем в базе данных роль АДМИНА
           cookie = user.getLoginCookie("admin0@gmail.com", "Admin000!");
-          given().cookie(cookie).when().post("/api/industry")
-                  .then()
-                  .assertThat().statusCode(403);
-      }*/
+            if (cookie != null) {
+                //This is like a precondition, by which we enter the edu-level in advance:
+               PostIndustryDto postIndustry = PostIndustryDto.builder()
+                .name("education1").build();
+        given().cookie(cookie).contentType(ContentType.JSON).body(postIndustry).when().post("/api/industry")
+                .then()
+                .log().all()
+                .assertThat().statusCode(403);
+        System.out.println(postAddHardSkill.getName());
+            } else {
+                // Handling the case when authentication fails
+                System.out.println("User not authenticated");
+            }
+    }*/
 
     @Test()
     public void postAddNewIndustry_code409_TestRA1() throws SQLException {//Industry with that name already exists
         cookie = user.getLoginCookie("admin1@gmail.com", "Admin001!");
         //It's like a precondition that we put in beforehand:
         PostIndustryDto postIndustry = PostIndustryDto.builder()
-                .name("education1")
-                .build();
-        given()
-                .cookie(cookie)
-                .contentType(ContentType.JSON)
-                .body(postIndustry)
-                .when()
-                .post("/api/industry");
+                .name("education1").build();
+        given().cookie(cookie).contentType(ContentType.JSON).body(postIndustry).when().post("/api/industry");
 
         //With this method we are trying to re-invest the existing industry:
         given().cookie(cookie).contentType(ContentType.JSON).body(postIndustry).when().post("/api/industry")

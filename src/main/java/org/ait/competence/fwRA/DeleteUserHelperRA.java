@@ -1,9 +1,10 @@
 package org.ait.competence.fwRA;
 
-import lombok.var;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+
 import static org.ait.competence.DataBaseRA.connection;
 
 public class DeleteUserHelperRA extends BaseHelperRA {
@@ -45,7 +46,7 @@ public class DeleteUserHelperRA extends BaseHelperRA {
         String query = "SELECT id FROM users WHERE email = ?";
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setString(1, email);
-            var resultSet = preparedStatement.executeQuery();
+            ResultSet resultSet = preparedStatement.executeQuery();
             return resultSet.next() ? resultSet.getInt("id") : -1;
         }
     }

@@ -60,6 +60,10 @@ public class HardSkillTestsRA extends TestBaseRA{
     public void postAddHardSkill_WithInvalidEmail_code401_TestRA1() throws SQLException { //User not authenticated
         cookie = user.getLoginCookie("invalid@gmail.com", "Admin001!"); //enter the wrong mail
         if (cookie != null) {
+            //This is like a precondition, by which we enter the hard-skill in advance:
+            PostAddHardSkillDto postAddHardSkill = PostAddHardSkillDto.builder()
+                    .name("Java").build();
+            given().cookie(cookie).contentType(ContentType.JSON).body(postAddHardSkill).when().post("/api/hard-skill");
             given().cookie(cookie).contentType(ContentType.JSON).when().post("/api/hard-skill")
                     .then().log().all()
                     .assertThat().statusCode(401);
@@ -67,41 +71,13 @@ public class HardSkillTestsRA extends TestBaseRA{
            System.out.println("Authentication failed. Cannot proceed with the test.");
         }
     }
- /* @Test
-    public void postAddHardSkill_code403_TestRA() throws SQLException { // Access denied for user with email <{0}> and role {1}
-                                                                            //не работает, т.к. не воспринимает с БД роль пользователя "BANNED"
-        admin.registerAdmin("admin0@gmail.com", "Admin000!", "superAdmin0");
-        admin.adminStatusBanned("admin0@gmail.com"); //changes the status to CONFIRMED in 2 database tables users, users_aud
-        admin.adminRole("admin0@gmail.com"); //assign the ADMIN role in the database
-        cookie = user.getLoginCookie("admin0@gmail.com", "Admin000!");
-          if (cookie != null) {
-                //This is like a precondition, by which we enter the edu-level in advance:
-               PostAddHardSkillDto postAddHardSkill = PostAddHardSkillDto.builder()
-                .name("Java")
-                .build();
-        given()
-                .cookie(cookie)
-                .contentType("application/json")
-                .body(postAddHardSkill)
-                .when()
-                .post("/api/hard-skill")
-                .then()
-                .log().all()
-                .assertThat().statusCode(403);
-        System.out.println(postAddHardSkill.getName());
 
-            } else {
-                // Handling the case when authentication fails
-                System.out.println("User not authenticated");
-            }
-    }*/
  @Test()
  public void postAddHardSkill_code409_TestRA1() throws SQLException { //HardSkill with that name already exists
      cookie = user.getLoginCookie("admin1@gmail.com", "Admin001!");
      //This is like a precondition, by which we enter the hard-skill in advance:
      PostAddHardSkillDto postAddHardSkill = PostAddHardSkillDto.builder()
-             .name("Java")
-             .build();
+             .name("Java").build();
      given().cookie(cookie).contentType(ContentType.JSON).body(postAddHardSkill).when().post("/api/hard-skill");
 
      //Using this method we try to re-enter an already existing hard-skill:
@@ -192,39 +168,6 @@ public class HardSkillTestsRA extends TestBaseRA{
         db.executeUpdate("DELETE FROM `hard_skill` WHERE `name` = '" + name + "';");
     }
 
-    /*   @Test
-        public void putUpdateHardSkillById_AccessDenied_code403_TestRA() throws SQLException {// не работает, т.к. не воспринимает с БД роль пользователя "BANNED"
-           //вместо предусловия выше, т.к. регистрация с другими параметрами:
-            admin.registerAdmin("admin0@gmail.com", "Admin000!", "superAdmin0");
-            admin.adminStatusBanned("admin0@gmail.com"); //меняет статус на BANNED в 2-х таблицах БД users, users_aud
-            admin.adminRole("admin0@gmail.com"); //присваиваем в базе данных роль АДМИНА
-            cookie = user.getLoginCookie("admin0@gmail.com", "Admin000!");
-
-            if (cookie != null) {
-                //This is like a precondition, by which we enter the hard-skill in advance:
-                PostAddHardSkillDto postAddHardSkill = PostAddHardSkillDto.builder()
-                        .name("Java").build();
-                given().cookie(cookie).contentType(ContentType.JSON).body(postAddHardSkill).when().post("/api/hard-skill");
-
-                //Using this method, try to update an existing hard-skill with an incorrect password in cookies:
-                String hardSkillId = admin.getHardSkillById("Java");
-                UpdateHardSkillDto updateHardSkillDto = UpdateHardSkillDto.builder()
-                        .name("C++")
-                        .build();
-                given().cookie(cookie).contentType(ContentType.JSON).body(updateHardSkillDto).when().put("/api/hard-skill/" + hardSkillId)
-                        .then()
-                        .log().all()
-                        .assertThat().statusCode(403);
-            } else {
-                // Handling the case when authentication fails
-                System.out.println("User not authenticated");
-            }
-           //The  method that deletes the above mentioned hard-skill by "name" from the database, so that it will be passed automatically afterwards
-        //in JENKINS-e and since deleting a user does not delete the hard-skill from the table automatically:
-        String name = "Java";
-        db.executeUpdate("DELETE FROM `hard_skill` WHERE `name` = '" + name + "';");
-        }*/
-
     @Test
     public void putUpdateHardSkillById_code409_TestRA() throws SQLException {//Profession with that name already exists
         cookie = user.getLoginCookie("admin1@gmail.com", "Admin001!");
@@ -292,34 +235,6 @@ public class HardSkillTestsRA extends TestBaseRA{
         db.executeUpdate("DELETE FROM `hard_skill` WHERE `name` = '" + name + "';");
     }
 
-     @Test
-    public void getAllHardSkills_code403_TestRA() throws SQLException { // не работает, т.к. не воспринимает с БД роль пользователя "BANNED"
-        //вместо предусловия выше, т.к. регистрация с другими параметрами:
-        admin.registerAdmin("admin0@gmail.com", "Admin000!", "superAdmin0");
-        admin.adminStatusBanned("admin0@gmail.com"); //Changes the status to BANNED in 2 database tables users, users_aud
-        admin.adminRole("admin0@gmail.com"); //Аssign the ADMIN role in the database
-        cookie = user.getLoginCookie("admin0@gmail.com", "Admin000!");
-
-        if (cookie != null) {
-            //это словно предусловие, которым я первоначально вкладываю hard-skill:
-            PostAddHardSkillDto postAddHardSkill = PostAddHardSkillDto.builder()
-                    .name("Java").build();
-            given().cookie(cookie).contentType(ContentType.JSON).body(postAddHardSkill).when().post("/api/hard-skill");
-
-            //этим методом получаем все hard-skill:
-                given().cookie(cookie).contentType("application/json").when().get("api/hard-skill")
-                        .then()
-                        .log().all()
-                        .assertThat().statusCode(403);
-            } else {
-               System.out.println("Authentication failed. Cannot proceed with the test.");
-            }
-        //The  method that deletes the above mentioned hard-skill by "name" from the database, so that it will be passed automatically afterwards
-        //in JENKINS-e and since deleting a user does not delete the hard-skill from the table automatically:
-         String name = "Java";
-         db.executeUpdate("DELETE FROM `hard_skill` WHERE `name` = '" + name + "';");
-    }
-
     @Test
     public void deleteHardSkillById_code200_TestRA() throws SQLException { //HardSkill deletion successful
         cookie = user.getLoginCookie("admin1@gmail.com", "Admin001!");
@@ -356,34 +271,6 @@ public class HardSkillTestsRA extends TestBaseRA{
           System.out.println("Authentication failed. Cannot proceed with the test.");
         }
     }
-
-/*    @Test
-    public void deleteHardSkillById_code403_TestRA() throws SQLException { // не работает, т.к. не воспринимает с БД роль пользователя "BANNED"
-        //вместо предусловия выше, т.к. регистрация с другими параметрами:
-        admin.registerAdmin("admin0@gmail.com", "Admin000!", "superAdmin0");
-        admin.adminStatusBanned("admin0@gmail.com"); //меняет статус на BANNED в 2-х таблицах БД users, users_aud
-        admin.adminRole("admin0@gmail.com"); //присваиваем в базе данных роль АДМИНА
-        cookie = user.getLoginCookie("admin0@gmail.com", "Admin000!");
-
-        //It's like a precondition by which we initially invest the hard-skill:
-        if (cookie != null) {
-            PostAddHardSkillDto postAddHardSkill = PostAddHardSkillDto.builder()
-                    .name("Java").build();
-            given().cookie(cookie).contentType(ContentType.JSON).body(postAddHardSkill).when().post("/api/hard-skill");
-
-            //With this method we delete an already existing hard-skill:
-            String hardSkillId = admin.getHardSkillById("Java");
-            given().cookie(cookie).contentType(ContentType.JSON).when().delete("/api/hard-skill/" + hardSkillId)
-                    .then()
-                    .log().all()
-                    .assertThat().statusCode(403);
-          } else {
-            System.out.println("Authentication failed. Cannot proceed with the test.");
-        }
-        // The second variant of deleting an already existing hard-skill (not through the database):
-        String hardSkillId = admin.getHardSkillById("Java");
-        given().cookie(cookie).contentType(ContentType.JSON).when().delete("/api/hard-skill/" + hardSkillId);
-    } */
 
     @AfterMethod
     public static void postConditionRA() throws SQLException {

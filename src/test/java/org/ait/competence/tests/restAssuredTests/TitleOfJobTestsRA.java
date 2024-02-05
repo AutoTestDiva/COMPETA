@@ -70,6 +70,10 @@ public class TitleOfJobTestsRA extends TestBaseRA {
     public void postAddNewTitleOfJob_WithInvalidEmail_code401_TestRA1() throws SQLException { //User not authenticated
         cookie = user.getLoginCookie("invalid@gmail.com", "Admin001!"); //enter wrong mail
         if (cookie != null) {
+            //It's like a precondition that we put a jobTitle in beforehand:
+            PostTitleOfJobDto postTitleOfJob = PostTitleOfJobDto.builder()
+                    .name("junior1").build();
+            given().cookie(cookie).contentType(ContentType.JSON).body(postTitleOfJob).when().post("/api/job-title");
             given().cookie(cookie).contentType(ContentType.JSON).when().post("/api/job-title")
                     .then()
                     .assertThat().statusCode(401);
@@ -93,8 +97,7 @@ public class TitleOfJobTestsRA extends TestBaseRA {
         cookie = user.getLoginCookie("admin1@gmail.com", "Admin001!");
         //It's like a precondition that we put a jobTitle in beforehand:
         PostTitleOfJobDto postTitleOfJob = PostTitleOfJobDto.builder()
-                .name("junior1")
-                .build();
+                .name("junior1").build();
         given().cookie(cookie).contentType(ContentType.JSON).body(postTitleOfJob).when().post("/api/job-title");
 
         //With this method we try to re-embed an existing jobTitle:

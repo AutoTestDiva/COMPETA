@@ -70,6 +70,11 @@ public class ProfessionTestsRA extends TestBaseRA {
     public void postAddNewProfession_WithInvalidEmail_code401_TestRA1() throws SQLException { //User not authenticated
         cookie = user.getLoginCookie("invalid@gmail.com", "Admin001!"); //enter the wrong mail
         if (cookie != null) {
+            //This is like a precondition, by which we enter the profession in advance:
+            PostAllProfessionsDto postAllProfession = PostAllProfessionsDto.builder()
+                    .name("programmer1")
+                    .build();
+            given().cookie(cookie).contentType(ContentType.JSON).body(postAllProfession).when().post("/api/profession");
             given().cookie(cookie).contentType(ContentType.JSON).when().post("/api/profession")
                     .then()
                     .assertThat().statusCode(401);
