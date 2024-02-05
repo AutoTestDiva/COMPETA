@@ -40,12 +40,12 @@ public class TitleOfJobTestsRA extends TestBaseRA {
                 .assertThat().statusCode(201);
         System.out.println(postTitleOfJob.getName());
 
-        //первый метод, удаляющий с базы данных выше указанный jobTitle по "name", чтоб потом автоматом проходил
-        //в JENKINS-e и т.к. удаление юзера не удаляет jobTitle с таблицы автоматом:
+        //first method that removes the above jobTitle by "name" from the database, so that it will be passed automatically afterwards
+        //in JENKINS-e and since deleting a user does not delete jobTitle from the table automatically:
         //       String name = "junior1";
         //       db.executeUpdate("DELETE FROM `job_title` WHERE `name` = '" + name + "';");
 
-        // второй вариант удаления уже имеющегося jobTitle (не через базу данных):
+        // The second variant of deleting an already existing jobTitle (not through the database):
         String jobTitleId = admin.getJobTitleIdById("junior1");
         given().cookie(cookie).contentType(ContentType.JSON).when().delete("/api/job-title/" + jobTitleId);
     }
@@ -68,13 +68,12 @@ public class TitleOfJobTestsRA extends TestBaseRA {
 
     @Test()
     public void postAddNewTitleOfJob_WithInvalidEmail_code401_TestRA1() throws SQLException { //User not authenticated
-        cookie = user.getLoginCookie("invalid@gmail.com", "Admin001!"); //сделать ошибку в почте
+        cookie = user.getLoginCookie("invalid@gmail.com", "Admin001!"); //enter wrong mail
         if (cookie != null) {
             given().cookie(cookie).contentType(ContentType.JSON).when().post("/api/job-title")
                     .then()
                     .assertThat().statusCode(401);
         } else {
-            // Обработка случая, когда аутентификация не удалась
             System.out.println("Authentication failed. Cannot proceed with the test.");
         }
     }
@@ -92,23 +91,23 @@ public class TitleOfJobTestsRA extends TestBaseRA {
     @Test()
     public void postAddNewTitleOfJob_code409_TestRA1() throws SQLException {//JobTitle with that name already exists
         cookie = user.getLoginCookie("admin1@gmail.com", "Admin001!");
-        //это словно предусловие, которым заранее вкладываем jobTitle:
+        //It's like a precondition that we put a jobTitle in beforehand:
         PostTitleOfJobDto postTitleOfJob = PostTitleOfJobDto.builder()
                 .name("junior1")
                 .build();
         given().cookie(cookie).contentType(ContentType.JSON).body(postTitleOfJob).when().post("/api/job-title");
 
-        //этим методом пытаемся повторно вложить уже имеющийся jobTitle:
+        //With this method we try to re-embed an existing jobTitle:
         given().cookie(cookie).contentType(ContentType.JSON).body(postTitleOfJob).when().post("/api/job-title")
                 .then()
                 .assertThat().statusCode(409);
 
-        //первый метод, удаляющий с базы данных выше указанный jobTitle по "name", чтоб потом автоматом проходил
-        //в JENKINS-e и т.к. удаление юзера не удаляет jobTitle с таблицы автоматом:
+        //First method that deletes the above jobTitle by "name" from the database, so that it will be passed automatically afterwards
+        //in JENKINS-e and since deleting a user does not delete jobTitle from the table automatically:
         //       String name = "junior1";
         //       db.executeUpdate("DELETE FROM `job_title` WHERE `name` = '" + name + "';");
 
-        // второй вариант удаления уже имеющегося jobTitle (не через базу данных):
+        // The second option is to delete an existing jobTitle (not through the database):
         String jobTitleId = admin.getJobTitleIdById("junior1");
         given().cookie(cookie).contentType(ContentType.JSON).when().delete("/api/job-title/" + jobTitleId);
     }
@@ -117,7 +116,7 @@ public class TitleOfJobTestsRA extends TestBaseRA {
     public void putUpdateTitleOfJobById_code200_TestRA() throws SQLException { //Title of job updated
         cookie = user.getLoginCookie("admin1@gmail.com", "Admin001!");
 
-        //это словно предусловие, которым заранее вкладываем jobTitle:
+        //It's like a precondition that we put a jobTitle in beforehand:
         PostTitleOfJobDto postTitleOfJob = PostTitleOfJobDto.builder()
                 .name("junior1").build();
         given().cookie(cookie).contentType(ContentType.JSON).body(postTitleOfJob).when().post("/api/job-title");
@@ -132,8 +131,8 @@ public class TitleOfJobTestsRA extends TestBaseRA {
                 .log().all()
                 .assertThat().statusCode(200);
 
-        //первый метод, удаляющий с базы данных выше указанный jobTitle по "name", чтоб потом автоматом проходил
-        //в JENKINS-e и т.к. удаление юзера не удаляет jobTitle с таблицы автоматом:
+        //First method that deletes the above jobTitle by "name" from the database, so that it will be passed automatically afterwards
+        //in JENKINS-e and since deleting a user does not delete jobTitle from the table automatically:
         String name = "junior2";
         db.executeUpdate("DELETE FROM `job_title` WHERE `name` = '" + name + "';");
     }
@@ -142,7 +141,7 @@ public class TitleOfJobTestsRA extends TestBaseRA {
     public void putUpdateTitleOfJobById_code400_TestRA() throws SQLException { //Not valid value name EduLevel
         cookie = user.getLoginCookie("admin1@gmail.com", "Admin001!");
 
-        //это словно предусловие, которым заранее вкладываем jobTitle:
+        //It's like a precondition that we put a jobTitle in beforehand:
         PostTitleOfJobDto postTitleOfJob = PostTitleOfJobDto.builder()
                 .name("junior1").build();
         given().cookie(cookie).contentType(ContentType.JSON).body(postTitleOfJob).when().post("/api/job-title");
@@ -157,8 +156,8 @@ public class TitleOfJobTestsRA extends TestBaseRA {
                 .log().all()
                 .assertThat().statusCode(400);
 
-        //первый метод, удаляющий с базы данных выше указанный jobTitle по "name", чтоб потом автоматом проходил
-        //в JENKINS-e и т.к. удаление юзера не удаляет jobTitle с таблицы автоматом:
+        //First method that deletes the above jobTitle by "name" from the database, so that it will be passed automatically afterwards
+        //in JENKINS-e and since deleting a user does not delete jobTitle from the table automatically:
         String name = "junior1";
         db.executeUpdate("DELETE FROM `job_title` WHERE `name` = '" + name + "';");
     }
@@ -167,7 +166,7 @@ public class TitleOfJobTestsRA extends TestBaseRA {
     public void putUpdateTitleOfJobById_code401_TestRA() throws SQLException { //User not authenticated
         cookie = user.getLoginCookie("admin1@gmail.com", "Invalid1!"); //enter incorrect password
         if (cookie != null) {
-            //это словно предусловие, которым заранее вкладываем jobTitle:
+            //It's like a precondition that we put the jobTitle in beforehand:
             PostTitleOfJobDto postTitleOfJob = PostTitleOfJobDto.builder()
                     .name("junior1").build();
             given().cookie(cookie).contentType(ContentType.JSON).body(postTitleOfJob).when().post("/api/job-title");
@@ -185,8 +184,8 @@ public class TitleOfJobTestsRA extends TestBaseRA {
             // Handling the case when authentication fails:
             System.out.println("User not authenticated");
         }
-        // метод, удаляющий с базы данных выше указанный jobTitle по "name", чтоб потом автоматом проходил
-        //в JENKINS-e и т.к. удаление юзера не удаляет jobTitle с таблицы автоматом:
+        // Method that deletes the above jobTitle by "name" from the database, so that it will be passed automatically afterwards
+        // in JENKINS-e and since deleting a user does not delete jobTitle from the table automatically:
         String name = "junior1";
         db.executeUpdate("DELETE FROM `job_title` WHERE `name` = '" + name + "';");
     }
@@ -246,9 +245,7 @@ public class TitleOfJobTestsRA extends TestBaseRA {
     @Test
     public void putUpdateTitleOfJobById_code409_TestRA() throws SQLException {//JobTitle with that name already exists
         cookie = user.getLoginCookie("admin1@gmail.com", "Admin001!");
-
         //It's like a precondition by which we initially invest the jobTitle:
-        //это словно предусловие, которым заранее вкладываем jobTitle:
         PostTitleOfJobDto postTitleOfJob = PostTitleOfJobDto.builder()
                 .name("junior1").build();
         given().cookie(cookie).contentType(ContentType.JSON).body(postTitleOfJob).when().post("/api/job-title");
@@ -263,12 +260,12 @@ public class TitleOfJobTestsRA extends TestBaseRA {
                 .log().all()
                 .assertThat().statusCode(409);
 
-        // метод, удаляющий с базы данных выше указанный jobTitle по "name", чтоб потом автоматом проходил
-        //в JENKINS-e и т.к. удаление юзера не удаляет jobTitle с таблицы автоматом:
+        // Method that deletes the above jobTitle by "name" from the database, so that it will be passed automatically afterwards
+        // in JENKINS-e and since deleting a user does not delete jobTitle from the table automatically:
 //        String name = "junior1";
 //        db.executeUpdate("DELETE FROM `job_title` WHERE `name` = '" + name + "';");
 
-        // второй вариант удаления уже имеющегося jobTitle (не через базу данных):
+        // The second variant of deleting an already existing jobTitle (not through the database):
         given().cookie(cookie).contentType(ContentType.JSON).when().delete("/api/job-title/" + jobTitleId);
     }
 
@@ -286,12 +283,12 @@ public class TitleOfJobTestsRA extends TestBaseRA {
                 .log().all()
                 .assertThat().statusCode(200);
 
-        // метод, удаляющий с базы данных выше указанный jobTitle по "name", чтоб потом автоматом проходил
-        //в JENKINS-e и т.к. удаление юзера не удаляет jobTitle с таблицы автоматом:
+        // Method that deletes the above jobTitle by "name" from the database, so that it will be passed automatically afterwards
+        // in JENKINS-e and since deleting a user does not delete jobTitle from the table automatically:
 //        String name = "junior1";
 //        db.executeUpdate("DELETE FROM `job_title` WHERE `name` = '" + name + "';");
 
-        // второй вариант удаления уже имеющегося jobTitle (не через базу данных):
+       // The second variant of deleting an already existing jobTitle (not through the database):
         String jobTitleId = admin.getJobTitleIdById("junior1");
         given().cookie(cookie).contentType(ContentType.JSON).when().delete("/api/job-title/" + jobTitleId);
     }
@@ -315,8 +312,8 @@ public class TitleOfJobTestsRA extends TestBaseRA {
             System.out.println("Authentication failed. Cannot proceed with the test.");
         }
 
-        // метод, удаляющий с базы данных выше указанный jobTitle по "name", чтоб потом автоматом проходил
-        //в JENKINS-e и т.к. удаление юзера не удаляет jobTitle с таблицы автоматом:
+        // Method that deletes the above jobTitle by "name" from the database, so that it will be passed automatically afterwards
+        // in JENKINS-e and since deleting a user does not delete jobTitle from the table automatically:
         String name = "junior1";
         db.executeUpdate("DELETE FROM `job_title` WHERE `name` = '" + name + "';");
     }
@@ -344,11 +341,12 @@ public class TitleOfJobTestsRA extends TestBaseRA {
                     // Обработка случая, когда аутентификация не удалась
                     System.out.println("Authentication failed. Cannot proceed with the test.");
                 }
-         // метод, удаляющий с базы данных выше указанный jobTitle по "name", чтоб потом автоматом проходил
-         //в JENKINS-e и т.к. удаление юзера не удаляет jobTitle с таблицы автоматом:
+        // Method that deletes the above jobTitle by "name" from the database, so that it will be passed automatically afterwards
+        // in JENKINS-e and since deleting a user does not delete jobTitle from the table automatically:
          String name = "junior1";
          db.executeUpdate("DELETE FROM `job_title` WHERE `name` = '" + name + "';");
      }*/
+
     @AfterMethod
     public static void postConditionRA() throws SQLException {
         String[] args = {"admin1@gmail.com"};

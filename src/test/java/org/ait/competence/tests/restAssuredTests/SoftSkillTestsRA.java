@@ -16,9 +16,8 @@ public class SoftSkillTestsRA extends TestBaseRA {
 
     @BeforeMethod
     public void preconditionRA() throws SQLException {
-        // Регистрируем админа
+        // register admin:
         admin.registerAdmin("admin1@gmail.com", "Admin001!", "superAdmin1");
-
         admin.adminStatusConfirmed("admin1@gmail.com"); //Changes the status to CONFIRMED in 2 database tables users, users_aud
         admin.adminRole("admin1@gmail.com"); //Assign the ADMIN role in the database
     }
@@ -200,45 +199,11 @@ public class SoftSkillTestsRA extends TestBaseRA {
                 .assertThat().statusCode(403);
     }*/
 
-  /*      @Test
-    public void putOneSoftSkillById_AccessDenied_code403_TestRA() throws SQLException {// не работает, т.к. не воспринимает с БД роль пользователя "BANNED"
-       //вместо предусловия выше, т.к. регистрация с другими параметрами:
-        admin.registerAdmin("admin0@gmail.com", "Admin000!", "superAdmin0");
-        admin.adminStatusBanned("admin0@gmail.com"); //меняет статус на BANNED в 2-х таблицах БД users, users_aud
-        admin.adminRole("admin0@gmail.com"); //присваиваем в базе данных роль АДМИНА
-        cookie = user.getLoginCookie("admin0@gmail.com", "Admin000!");
-
-        if (cookie != null) {
-            //это словно предусловие, которым я первоначально вкладываю скилл:
-            PostAllSoftSkillDto postAllSoftSkill = PostAllSoftSkillDto.builder()
-                    .name("team work10").build();
-            given().cookie(cookie).contentType(ContentType.JSON).body(postAllSoftSkill).when().post("/api/soft-skill");
-
-            //этим методом я пытаюсь обновить уже имеющийся скилл:
-            String softSkillId = admin.getSoftSkillById("team work10");
-            UpdateSoftSkillNameDto updateSoftSkillNameDto = UpdateSoftSkillNameDto.builder()
-                    .name("team work1")
-                    .build();
-            given().cookie(cookie).contentType(ContentType.JSON).body(updateSoftSkillNameDto).when().put("/api/soft-skill/" + softSkillId)
-                    .then()
-                    .log().all()
-                    .assertThat().statusCode(403);
-        } else {
-            // Handling the case when authentication fails
-            System.out.println("User not authenticated");
-        }
-        //Method to delete the above soft-skill by "name" from the database, so that it will be automatically passed later on
-        //in JENKINS-e and since deleting a user does not automatically delete soft-skills from the table:
-        String name = "team work10";
-        db.executeUpdate("DELETE FROM `soft_skill` WHERE `name` = '" + name + "';");
-    }*/
-
     @Test
     public void putSoftSkillById_code409_TestRA() throws SQLException {//SoftSkill already exists
         cookie = user.getLoginCookie("admin1@gmail.com", "Admin001!");
 
         //It's like a precondition by which we initially invest the skillet:
-
         PostAllSoftSkillDto postAllSoftSkill = PostAllSoftSkillDto.builder()
                 .name("team work10").build();
         given().cookie(cookie).contentType(ContentType.JSON).body(postAllSoftSkill).when().post("/api/soft-skill");
@@ -291,7 +256,6 @@ public class SoftSkillTestsRA extends TestBaseRA {
         cookie = user.getLoginCookie("invalid@gmail.com", "Admin001!"); //enter wrong mail в coockies
         //It's like a precondition by which we initially invest the skillet:
         if (cookie != null) {
-
             PostAllSoftSkillDto postAllSoftSkill = PostAllSoftSkillDto.builder()
                     .name("team work10").build();
             given().cookie(cookie).contentType(ContentType.JSON).body(postAllSoftSkill).when().post("/api/soft-skill");
@@ -305,7 +269,6 @@ public class SoftSkillTestsRA extends TestBaseRA {
             // Handling the case when authentication fails
             System.out.println("Authentication failed. Cannot proceed with the test.");
         }
-
         //Method to delete the above soft-skill by "name" from the database, so that it will be automatically passed later on
         //in JENKINS-e and since deleting a user does not automatically delete soft-skills from the table:
         String name = "team work10";
@@ -344,7 +307,6 @@ public class SoftSkillTestsRA extends TestBaseRA {
     @Test
     public void deleteSoftSkillById_code200_TestRA() throws SQLException { //deletion successful
         cookie = user.getLoginCookie("admin1@gmail.com", "Admin001!");
-
         //It's like a precondition by which we initially invest the skillet:
         PostAllSoftSkillDto postAllSoftSkill = PostAllSoftSkillDto.builder()
                 .name("team work10").build();
@@ -361,9 +323,7 @@ public class SoftSkillTestsRA extends TestBaseRA {
     @Test
     public void deleteOneSoftSkillById_code401_TestRA() throws SQLException {//User not authenticated
         cookie = user.getLoginCookie("invalid@gmail.com", "Admin001!");//сделать ошибку в почте
-
         //It's like a precondition by which we initially invest the skillet:
-
         if (cookie != null) {
             PostAllSoftSkillDto postAllSoftSkill = PostAllSoftSkillDto.builder()
                     .name("team work10").build();
@@ -372,7 +332,6 @@ public class SoftSkillTestsRA extends TestBaseRA {
             //Use this method to remove an existing skillet:
             String softSkillId = admin.getSoftSkillById("team work10");
             given().cookie(cookie).contentType(ContentType.JSON).when().delete("/api/soft-skill/" + softSkillId)
-
                     .then()
                     .log().all()
                     .assertThat().statusCode(401);
@@ -380,16 +339,7 @@ public class SoftSkillTestsRA extends TestBaseRA {
             System.out.println("Authentication failed. Cannot proceed with the test.");
         }
     }
-/*
- @Test
-    public void getAllSoftSkill_code403_TestRA() throws SQLException { // не работает, т.к. не воспринимает с БД роль пользователя "BANNED"
-        //вместо предусловия выше, т.к. регистрация с другими параметрами:
-        admin.registerAdmin("admin0@gmail.com", "Admin000!", "superAdmin0");
-        admin.adminStatusBanned("admin0@gmail.com"); //меняет статус на BANNED в 2-х таблицах БД users, users_aud
-        admin.adminRole("admin0@gmail.com"); //присваиваем в базе данных роль АДМИНА
-        cookie = user.getLoginCookie("admin0@gmail.com", "Admin000!");
-
-    /*   @Test
+/*  @Test
     public void deleteAllSoftSkill_code403_TestRA() throws SQLException { // не работает, т.к. не воспринимает с БД роль пользователя "BANNED"
         //вместо предусловия выше, т.к. регистрация с другими параметрами:
         admin.registerAdmin("admin0@gmail.com", "Admin000!", "superAdmin0");
@@ -402,7 +352,6 @@ public class SoftSkillTestsRA extends TestBaseRA {
             PostAllSoftSkillDto postAllSoftSkill = PostAllSoftSkillDto.builder()
                     .name("team work10").build();
             given().cookie(cookie).contentType(ContentType.JSON).body(postAllSoftSkill).when().post("/api/soft-skill");
-
 
             //этим методом пытаемся удалить скилы:
             String softSkillId = admin.getSoftSkillById("team work10");

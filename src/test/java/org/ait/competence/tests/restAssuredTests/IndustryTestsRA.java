@@ -7,10 +7,12 @@ import org.ait.competence.dto.*;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
 import java.sql.SQLException;
+
 import static io.restassured.RestAssured.given;
 
-public class IndustryTestsRA extends TestBaseRA{
+public class IndustryTestsRA extends TestBaseRA {
     private Cookie cookie;
 
     @BeforeMethod
@@ -59,6 +61,7 @@ public class IndustryTestsRA extends TestBaseRA{
                 .then()
                 .assertThat().statusCode(400);
     }
+
     @Test()
     public void postAddNewIndustry_WithInvalidEmail_code401_TestRA1() throws SQLException { //User not authenticated
         cookie = user.getLoginCookie("invalid@gmail.com", "Admin001!"); //сделать ошибку в почте
@@ -67,7 +70,7 @@ public class IndustryTestsRA extends TestBaseRA{
                     .then()
                     .assertThat().statusCode(401);
         } else {
-           System.out.println("Authentication failed. Cannot proceed with the test.");
+            System.out.println("Authentication failed. Cannot proceed with the test.");
         }
     }
  /* @Test
@@ -84,7 +87,7 @@ public class IndustryTestsRA extends TestBaseRA{
     @Test()
     public void postAddNewIndustry_code409_TestRA1() throws SQLException {//Industry with that name already exists
         cookie = user.getLoginCookie("admin1@gmail.com", "Admin001!");
-        //это словно предусловие, которым заранее вкладываем industry:
+        //It's like a precondition that we put in beforehand:
         PostIndustryDto postIndustry = PostIndustryDto.builder()
                 .name("education1")
                 .build();
@@ -95,7 +98,7 @@ public class IndustryTestsRA extends TestBaseRA{
                 .when()
                 .post("/api/industry");
 
-        //этим методом пытаемся повторно вложить уже имеющийся industry:
+        //With this method we are trying to re-invest the existing industry:
         given().cookie(cookie).contentType(ContentType.JSON).body(postIndustry).when().post("/api/industry")
                 .then()
                 .assertThat()
@@ -110,7 +113,7 @@ public class IndustryTestsRA extends TestBaseRA{
     public void putUpdateIndustryById_code200_TestRA() throws SQLException { //Industry updated
         cookie = user.getLoginCookie("admin1@gmail.com", "Admin001!");
 
-        //это словно предусловие, которым заранее вкладываем industry:
+        //It's like a precondition that we put in beforehand:
         PostIndustryDto postIndustry = PostIndustryDto.builder()
                 .name("education1").build();
         given().cookie(cookie).contentType(ContentType.JSON).body(postIndustry).when().post("/api/industry");
@@ -133,7 +136,7 @@ public class IndustryTestsRA extends TestBaseRA{
     public void putUpdateIndustryById_code400_TestRA() throws SQLException { //Validation errors
         cookie = user.getLoginCookie("admin1@gmail.com", "Admin001!");
 
-        //это словно предусловие, которым заранее вкладываем industry:
+        //It's like a precondition that we put in beforehand:
         PostIndustryDto postIndustry = PostIndustryDto.builder()
                 .name("education1").build();
         given().cookie(cookie).contentType(ContentType.JSON).body(postIndustry).when().post("/api/industry");
@@ -156,7 +159,7 @@ public class IndustryTestsRA extends TestBaseRA{
     public void putUpdateIndustryById_code401_TestRA() throws SQLException { //User not authenticated
         cookie = user.getLoginCookie("admin1@gmail.com", "Invalid1!"); //enter incorrect password
         if (cookie != null) {
-            //это словно предусловие, которым заранее вкладываем industry:
+            //It's like a precondition that we put in beforehand:
             PostIndustryDto postIndustry = PostIndustryDto.builder()
                     .name("education1").build();
             given().cookie(cookie).contentType(ContentType.JSON).body(postIndustry).when().post("/api/industry");
@@ -213,24 +216,24 @@ public class IndustryTestsRA extends TestBaseRA{
     public void putUpdateIndustryById_code404_TestRA() throws SQLException { //Industry not found
         cookie = user.getLoginCookie("admin1@gmail.com", "Admin001!");
 
-        // Получаем идентификатор существующей отрасли или null, если такой отрасли нет
+        // Get the identifier of an existing industry or null if there is no such industry:
         String industryId = admin.getIndustryById("education1");
 
         if (industryId == null) {
             System.out.println("Industry with name 'education1' not found");
         } else {
-            // Ошибка: пытаемся обновить отрасль, которая существует
+            // Error: Trying to update an industry that exists
             UpdateIndustryDto updateIndustryDto = UpdateIndustryDto.builder()
                     .name("education2").build();
 
-            // Отправляем PUT запрос с существующим идентификатором отрасли
+            //Send a PUT request with an existing industry identifier
             Response response = given().cookie(cookie).contentType(ContentType.JSON).body(updateIndustryDto)
                     .when().put("/api/industry/" + industryId);
 
-            // Печатаем весь ответ для деталей (можно убрать в production коде)
+            // Print the whole response for details (can be removed in production code)
             System.out.println("Response: " + response.asString());
 
-            // Проверяем, что код ответа - 404
+            // Check that the response code is 404
             response.then().log().all().assertThat().statusCode(404);
         }
     }
@@ -239,7 +242,7 @@ public class IndustryTestsRA extends TestBaseRA{
     public void putUpdateIndustryById_code409_TestRA() throws SQLException {//Industry with that name already exists
         cookie = user.getLoginCookie("admin1@gmail.com", "Admin001!");
 
-        //это словно предусловие, которым заранее вкладываем industry:
+        //It's like a precondition that we put in beforehand:
         PostIndustryDto postIndustry = PostIndustryDto.builder()
                 .name("education1").build();
         given().cookie(cookie).contentType(ContentType.JSON).body(postIndustry).when().post("/api/industry");
@@ -271,7 +274,7 @@ public class IndustryTestsRA extends TestBaseRA{
                 .log().all()
                 .assertThat().statusCode(200);
 
-        // вариант удаления уже имеющегося industry:
+        //Option to delete an existing industry:
         String industryId = admin.getIndustryById("education1");
         given().cookie(cookie).contentType(ContentType.JSON).when().delete("/api/industry/" + industryId);
     }
@@ -304,7 +307,7 @@ public class IndustryTestsRA extends TestBaseRA{
                     .log().all()
                     .assertThat().statusCode(401);
         } else {
-               System.out.println("Authentication failed. Cannot proceed with the test.");
+            System.out.println("Authentication failed. Cannot proceed with the test.");
         }
         // deleting an already existing industry:
         String name = "education1";

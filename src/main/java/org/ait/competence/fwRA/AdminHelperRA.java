@@ -127,4 +127,28 @@ public class AdminHelperRA extends BaseHelperRA {
             }
             return industryId;
         }
+
+    public String getHardSkillById(String name) {
+        String hardSkillId;
+        try {
+            hardSkillId = db.requestSelect("SELECT id FROM hard_skill WHERE name = '" + name + "';")
+                    .getString(1);
+        } catch (SQLException e) {
+            hardSkillId = null;
+            System.out.println("The name is not found" + e);
+        }
+        return hardSkillId;
     }
+
+    public String getEduLevelById(String name) {
+        String hardSkillId;
+        try {
+            hardSkillId = db.requestSelect("SELECT id FROM edu_level WHERE name = '" + name + "';")
+                    .getString(1);
+        } catch (SQLException e) {
+            hardSkillId = null;
+            System.out.println("The name is not found" + e);
+        }
+        return hardSkillId;
+    }
+}

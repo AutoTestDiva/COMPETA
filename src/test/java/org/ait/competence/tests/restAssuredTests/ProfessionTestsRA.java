@@ -81,17 +81,36 @@ public class ProfessionTestsRA extends TestBaseRA {
 
    /* @Test
     public void postAddNewProfession_code403_TestRA() throws SQLException { // Access denied for user with email <{0}> and role {1}
-                                                                            //не работает, т.к. не воспринимает с БД роль пользователя "BANNED"
+        //не работает, т.к. не воспринимает с БД роль пользователя "BANNED"
         admin.registerAdmin("admin0@gmail.com", "Admin000!", "superAdmin0");
         admin.adminStatusBanned("admin0@gmail.com"); //changes the status to CONFIRMED in 2 database tables users, users_aud
         admin.adminRole("admin0@gmail.com"); //assign the ADMIN role in the database
         cookie = user.getLoginCookie("admin0@gmail.com", "Admin000!");
-        given().cookie(cookie).when().post("/api/profession")
-                .then()
-                .assertThat().statusCode(403);
-    }*/
 
-    @Test()
+        if (cookie != null) {
+            //это словно предусловие, которым я первоначально вкладываю profession:
+            PostAllProfessionsDto postAllProfessions = PostAllProfessionsDto.builder()
+                    .name("team work10").build();
+            given().cookie(cookie).contentType(ContentType.JSON).body(postAllProfessions).when().post("/api/profession")
+                    .then()
+                    .log().all()
+                    .assertThat().statusCode(403);
+                    System.out.println(postAllProfessions.getName());
+        } else {
+            // Обработка случая, когда аутентификация не удалась
+            System.out.println("Authentication failed. Cannot proceed with the test.");
+        }
+
+        //первый метод, удаляющий с базы данных выше указанный profession по "name", чтоб потом автоматом проходил
+        //в JENKINS-e и т.к. удаление юзера не удаляет profession с таблицы автоматом
+//        String name = "team work10";
+//        db.executeUpdate("DELETE FROM `soft_skill` WHERE `name` = '" + name + "';");
+
+        // второй вариант удаления уже имеющегося profession (не через базу данных):
+        String professionId = admin.getProfessionById("programmer1");
+        given().cookie(cookie).contentType(ContentType.JSON).when().delete("/api/profession/" + professionId);
+    }*/
+        @Test()
     public void postAddNewProfession_code409_TestRA1() throws SQLException { //Profession with that name already exists
         cookie = user.getLoginCookie("admin1@gmail.com", "Admin001!");
         //This is like a precondition, by which we enter the profession in advance:
@@ -114,7 +133,6 @@ public class ProfessionTestsRA extends TestBaseRA {
         String professionId = admin.getProfessionById("programmer1");
         given().cookie(cookie).contentType(ContentType.JSON).when().delete("/api/profession/" + professionId);
     }
-
 
     @Test
     public void putUpdateProfessionById_code200_TestRA() throws SQLException { //Profession updated
@@ -314,7 +332,6 @@ public class ProfessionTestsRA extends TestBaseRA {
                     .log().all()
                     .assertThat().statusCode(401);
         } else {
-            // Handling the case when authentication failed:
             System.out.println("Authentication failed. Cannot proceed with the test.");
         }
 
@@ -345,8 +362,7 @@ public class ProfessionTestsRA extends TestBaseRA {
                         .log().all()
                         .assertThat().statusCode(403);
             } else {
-                // Обработка случая, когда аутентификация не удалась
-                System.out.println("Authentication failed. Cannot proceed with the test.");
+               System.out.println("Authentication failed. Cannot proceed with the test.");
             }
 
         //The  method that deletes the above mentioned profession by "name" from the database, so that it will be passed automatically afterwards
@@ -389,7 +405,6 @@ public class ProfessionTestsRA extends TestBaseRA {
                     .log().all()
                     .assertThat().statusCode(401);
         } else {
-            // Handling the case when authentication fails
             System.out.println("Authentication failed. Cannot proceed with the test.");
         }
     }
