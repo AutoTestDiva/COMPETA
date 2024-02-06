@@ -15,14 +15,16 @@ public class LogInTests extends TestBase {
 
     @Test
     public void logInPositiveTest() {
-        new LogInPage(driver)
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        new LogInPage(driver, js)
                 .logIn("Student33@gmail.com", "Qwerty007!")
                 .verifyLogOutBtnIsPresent();
     }
 
     @Test
     public void logInNegativeTest() {
-        new LogInPage(driver)
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        new LogInPage(driver, js)
                 .logIn("Student1@gmail.com", "Qwerty007")
                 .verifyErrorMessageIsPresent();
     }

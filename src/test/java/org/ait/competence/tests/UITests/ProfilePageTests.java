@@ -13,7 +13,7 @@ public class ProfilePageTests extends TestBase{
     public void precondition() {
         JavascriptExecutor js = (JavascriptExecutor) driver;
         new LandingPage(driver, js).selectLogIn();
-        new LogInPage(driver).logIn("Student33@gmail.com", "Qwerty007!");
+        new LogInPage(driver, js).logIn("Student33@gmail.com", "Qwerty007!");
     }
 
     @Test

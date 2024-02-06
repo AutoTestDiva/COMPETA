@@ -14,7 +14,7 @@ public class HomePage extends BasePage {
     private final JavascriptExecutor js;
 
     public HomePage(WebDriver driver, JavascriptExecutor js) {
-        super(driver);
+        super(driver, js);
         this.js = js;
     }
 
@@ -67,19 +67,23 @@ public class HomePage extends BasePage {
         return new SignUpPage(driver, js);
     }
 
-    public void scrollToElement(WebElement element) {
-        if (js != null) {
-            js.executeScript("arguments[0].scrollIntoView(true);", element);
-        } else {
-            System.err.println("JavascriptExecutor is not initialized!");
-        }
-    }
+//    public void scrollToElement(WebElement element) {
+//        if (js != null) {
+//            js.executeScript("arguments[0].scrollIntoView(true);", element);
+//        } else {
+//            System.err.println("JavascriptExecutor is not initialized!");
+//        }
+//    }
 
-    @FindBy(xpath = "//button[@aria-label='Administrator menu']")
+    @FindBy(xpath = "//header/div[1]/div[2]/button[1]")
     public WebElement administratorMenuButton;
     public HomePage selectAdministratorMenu() {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        clickWithJSExecutor(administratorMenuButton, 0, 300);
+        // Это гарантирует, что перед попыткой выполнить клик по кнопке администратора,
+        // страница будет прокручена к этому элементу, а затем будет ожидаться его видимость
+        // и доступность
+        wait.until(ExpectedConditions.elementToBeClickable(
+                new HomePage(driver, js).administratorMenuButton)).click();
         return new HomePage(driver, js);
     }
 
@@ -95,12 +99,20 @@ public class HomePage extends BasePage {
     WebElement registrationDateText;
     public ProfilePage verifyRegisteredSinceIsPresent(String text) {
         Assert.assertTrue(shouldHaveText(registrationDateText, text, 10));
-        return new ProfilePage(driver);
+        return new ProfilePage(driver, js);
     }
 
     public HomePage selectLogOut() {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         wait.until(ExpectedConditions.elementToBeClickable(logOutBtn)).click();
+        return this;
+    }
+
+    @FindBy(xpath = "//body/div[@id='menu-appbar']/div[3]/ul[1]/li[2]")
+    WebElement administration;
+    public HomePage selectAdministration() {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        clickWithJSExecutor(administration, 0, 300);
         return this;
     }
 

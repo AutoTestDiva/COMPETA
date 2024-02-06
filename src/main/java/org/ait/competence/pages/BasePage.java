@@ -12,10 +12,12 @@ import org.testng.Assert;
 
 import java.time.Duration;
 public abstract class BasePage {
+    private final JavascriptExecutor js;
     WebDriver driver;
 
-    public BasePage(WebDriver driver) {
+    public BasePage(WebDriver driver, JavascriptExecutor js) {
         this.driver = driver;
+        this.js = js;
         PageFactory.initElements(driver, this);
     }
 
@@ -64,6 +66,14 @@ public abstract class BasePage {
             return true;
         } catch (TimeoutException e) {
             return false;
+        }
+    }
+
+    public void scrollToElement(WebElement element) {
+        if (js != null) {
+            js.executeScript("arguments[0].scrollIntoView(true);", element);
+        } else {
+            System.err.println("JavascriptExecutor is not initialized!");
         }
     }
 

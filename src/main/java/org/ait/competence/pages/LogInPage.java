@@ -10,9 +10,10 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.time.Duration;
 
 public class LogInPage extends BasePage {
-    public LogInPage(WebDriver driver) {
-
-        super(driver);
+    private final JavascriptExecutor js;
+    public LogInPage(WebDriver driver, JavascriptExecutor js) {
+        super(driver, js);
+        this.js = js;
     }
 
     @FindBy(xpath = "//input[@id='name-input']")
@@ -25,6 +26,7 @@ public class LogInPage extends BasePage {
     WebElement logInButton;
 
     public HomePage logIn(String email, String password) {
+
         type(userNameField, email);
         type(passwordField, password);
         click(logInButton);

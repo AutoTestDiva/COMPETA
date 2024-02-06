@@ -12,7 +12,7 @@ public class SignUpPage extends BasePage {
 
     private final JavascriptExecutor js;
     public SignUpPage(WebDriver driver, JavascriptExecutor js) {
-        super(driver);
+        super(driver, js);
         this.js = js;
     }
 
