@@ -123,7 +123,7 @@ public class TitleOfJobAllWithCode_403_testsRA extends TestBaseRA{
 
     @AfterMethod
     public static void postConditionForTestsWithCode_403_TestsRA() throws SQLException {
-        // deleting an already existing hard-skill from DataBase, т.е зачищаем БД:
+        // deleting an already existing job_title from DataBase, т.е зачищаем БД:
         String name = "Java";
         db.executeUpdate("DELETE FROM `job_title` WHERE `name` = '" + name + "';");
         //удаляем пользователя с 4-х таблиц users в БД

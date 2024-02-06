@@ -83,39 +83,7 @@ public class ProfessionTestsRA extends TestBaseRA {
             System.out.println("Authentication failed. Cannot proceed with the test.");
         }
     }
-
-   /* @Test
-    public void postAddNewProfession_code403_TestRA() throws SQLException { // Access denied for user with email <{0}> and role {1}
-        //не работает, т.к. не воспринимает с БД роль пользователя "BANNED"
-        admin.registerAdmin("admin0@gmail.com", "Admin000!", "superAdmin0");
-        admin.adminStatusBanned("admin0@gmail.com"); //changes the status to CONFIRMED in 2 database tables users, users_aud
-        admin.adminRole("admin0@gmail.com"); //assign the ADMIN role in the database
-        cookie = user.getLoginCookie("admin0@gmail.com", "Admin000!");
-
-        if (cookie != null) {
-            //это словно предусловие, которым я первоначально вкладываю profession:
-            PostAllProfessionsDto postAllProfessions = PostAllProfessionsDto.builder()
-                    .name("team work10").build();
-            given().cookie(cookie).contentType(ContentType.JSON).body(postAllProfessions).when().post("/api/profession")
-                    .then()
-                    .log().all()
-                    .assertThat().statusCode(403);
-                    System.out.println(postAllProfessions.getName());
-        } else {
-            // Обработка случая, когда аутентификация не удалась
-            System.out.println("Authentication failed. Cannot proceed with the test.");
-        }
-
-        //первый метод, удаляющий с базы данных выше указанный profession по "name", чтоб потом автоматом проходил
-        //в JENKINS-e и т.к. удаление юзера не удаляет profession с таблицы автоматом
-//        String name = "team work10";
-//        db.executeUpdate("DELETE FROM `soft_skill` WHERE `name` = '" + name + "';");
-
-        // второй вариант удаления уже имеющегося profession (не через базу данных):
-        String professionId = admin.getProfessionById("programmer1");
-        given().cookie(cookie).contentType(ContentType.JSON).when().delete("/api/profession/" + professionId);
-    }*/
-        @Test()
+           @Test()
     public void postAddNewProfession_code409_TestRA1() throws SQLException { //Profession with that name already exists
         cookie = user.getLoginCookie("admin1@gmail.com", "Admin001!");
         //This is like a precondition, by which we enter the profession in advance:
@@ -217,40 +185,7 @@ public class ProfessionTestsRA extends TestBaseRA {
         String name = "programmer1";
         db.executeUpdate("DELETE FROM `profession` WHERE `name` = '" + name + "';");
     }
-
-    /*      @Test
-        public void putUpdateProfessionById_AccessDenied_code403_TestRA() throws SQLException {// не работает, т.к. не воспринимает с БД роль пользователя "BANNED"
-           //вместо предусловия выше, т.к. регистрация с другими параметрами:
-            admin.registerAdmin("admin0@gmail.com", "Admin000!", "superAdmin0");
-            admin.adminStatusBanned("admin0@gmail.com"); //меняет статус на BANNED в 2-х таблицах БД users, users_aud
-            admin.adminRole("admin0@gmail.com"); //присваиваем в базе данных роль АДМИНА
-            cookie = user.getLoginCookie("admin0@gmail.com", "Admin000!");
-
-            if (cookie != null) {
-                //This is like a precondition by which a profession is initially entered:
-                 PostAllProfessionsDto postAllProfession = PostAllProfessionsDto.builder()
-                        .name("programmer1").build();
-                given().cookie(cookie).contentType(ContentType.JSON).body(postAllProfession).when().post("/api/profession");
-
-                //этим методом я пытаюсь обновить уже имеющуюся профессию:
-                String professionId = admin.getProfessionById("programmer1");
-                UpdateProfessionNameDto updateProfessionNameDto = UpdateProfessionNameDto.builder()
-                        .name("programmer2")
-                        .build();
-                given().cookie(cookie).contentType(ContentType.JSON).body(updateProfessionNameDto).when().put("/api/profession/" + professionId)
-                        .then()
-                        .log().all()
-                        .assertThat().statusCode(403);
-            } else {
-                // Handling the case when authentication fails
-                System.out.println("User not authenticated");
-            }
-           //The  method that deletes the above mentioned profession by "name" from the database, so that it will be passed automatically afterwards
-        //in JENKINS-e and since deleting a user does not delete the profession from the table automatically:
-        String name = "programmer1";
-        db.executeUpdate("DELETE FROM `profession` WHERE `name` = '" + name + "';");
-        }*/
-    @Test
+       @Test
     public void putUpdateProfessionById_code404_TestRA() throws SQLException { //Profession not found
         cookie = user.getLoginCookie("admin1@gmail.com", "Admin001!");
 
@@ -345,38 +280,7 @@ public class ProfessionTestsRA extends TestBaseRA {
         String name = "programmer1";
         db.executeUpdate("DELETE FROM `profession` WHERE `name` = '" + name + "';");
     }
-
-    /*
- @Test
-    public void getListOfProfessions_code403_TestRA() throws SQLException { // не работает, т.к. не воспринимает с БД роль пользователя "BANNED"
-        //вместо предусловия выше, т.к. регистрация с другими параметрами:
-        admin.registerAdmin("admin0@gmail.com", "Admin000!", "superAdmin0");
-        admin.adminStatusBanned("admin0@gmail.com"); //Changes the status to BANNED in 2 database tables users, users_aud
-        admin.adminRole("admin0@gmail.com"); //Аssign the ADMIN role in the database
-        cookie = user.getLoginCookie("admin0@gmail.com", "Admin000!");
-
-        if (cookie != null) {
-            //это словно предусловие, которым я первоначально вкладываю профессию:
-              PostAllProfessionsDto postAllProfession = PostAllProfessionsDto.builder()
-                    .name("programmer1").build();
-            given().cookie(cookie).contentType(ContentType.JSON).body(postAllProfession).when().post("/api/profession");
-
-                //этим методом получаем все профессии:
-                given().cookie(cookie).contentType("application/json").when().get("api/profession/all")
-                        .then()
-                        .log().all()
-                        .assertThat().statusCode(403);
-            } else {
-               System.out.println("Authentication failed. Cannot proceed with the test.");
-            }
-
-        //The  method that deletes the above mentioned profession by "name" from the database, so that it will be passed automatically afterwards
-        //in JENKINS-e and since deleting a user does not delete the profession from the table automatically:
-         String name = "programmer1";
-         db.executeUpdate("DELETE FROM `profession` WHERE `name` = '" + name + "';");
-    } */
-
-    @Test
+     @Test
     public void deleteProfessionById_code200_TestRA() throws SQLException { //Profession deleted
         cookie = user.getLoginCookie("admin1@gmail.com", "Admin001!");
 
@@ -413,42 +317,6 @@ public class ProfessionTestsRA extends TestBaseRA {
             System.out.println("Authentication failed. Cannot proceed with the test.");
         }
     }
-
-     /*   @Test
-    public void deleteProfessionById_code403_TestRA() throws SQLException { // не работает, т.к. не воспринимает с БД роль пользователя "BANNED"
-        //вместо предусловия выше, т.к. регистрация с другими параметрами:
-        admin.registerAdmin("admin0@gmail.com", "Admin000!", "superAdmin0");
-        admin.adminStatusBanned("admin0@gmail.com"); //меняет статус на BANNED в 2-х таблицах БД users, users_aud
-        admin.adminRole("admin0@gmail.com"); //присваиваем в базе данных роль АДМИНА
-        cookie = user.getLoginCookie("admin0@gmail.com", "Admin000!");
-
-        if (cookie != null) {
-             //это словно предусловие, которым я первоначально вкладываю профессию:
-              PostAllProfessionsDto postAllProfession = PostAllProfessionsDto.builder()
-                    .name("programmer1").build();
-            given().cookie(cookie).contentType(ContentType.JSON).body(postAllProfession).when().post("/api/profession");
-
-            //этим методом пытаемся удалить профессию:
-            String professionId = admin.getProfessionById("programmer1");
-            given().cookie(cookie).contentType(ContentType.JSON).when().delete("/api/profession/" + professionId)
-                    .then()
-                    .log().all()
-                    .assertThat().statusCode(403);
-          } else {
-            // Обработка случая, когда аутентификация не удалась
-            System.out.println("Authentication failed. Cannot proceed with the test.");
-        }
-
-         //The first method that deletes the above mentioned profession by "name" from the database, so that it will be passed automatically afterwards
-        //in JENKINS-e and since deleting a user does not delete the profession from the table automatically:
-        //       String name = "programmer1";
-        //       db.executeUpdate("DELETE FROM `profession` WHERE `name` = '" + name + "';");
-
-        // The second variant of deleting an already existing profession (not through the database):
-        String professionId = admin.getProfessionById("programmer1");
-        given().cookie(cookie).contentType(ContentType.JSON).when().delete("/api/profession/" + professionId);
-    } */
-
     @AfterMethod
 //  @Test
     public static void postConditionRA() throws SQLException {

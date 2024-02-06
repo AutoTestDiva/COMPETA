@@ -276,36 +276,7 @@ public class TitleOfJobTestsRA extends TestBaseRA {
         db.executeUpdate("DELETE FROM `job_title` WHERE `name` = '" + name + "';");
     }
 
-    /* @Test
-        public void getListTitleOfJob_code403_TestRA() throws SQLException { // не работает, т.к. не воспринимает с БД роль пользователя "BANNED"
-            //вместо предусловия выше, т.к. регистрация с другими параметрами:
-            admin.registerAdmin("admin0@gmail.com", "Admin000!", "superAdmin0");
-            admin.adminStatusBanned("admin0@gmail.com"); //Changes the status to BANNED in 2 database tables users, users_aud
-            admin.adminRole("admin0@gmail.com"); //Аssign the ADMIN role in the database
-            cookie = user.getLoginCookie("admin0@gmail.com", "Admin000!");
-
-            if (cookie != null) {
-                //это словно предусловие, которым я первоначально вкладываю jobTitle:
-                PostTitleOfJobDto postTitleOfJob = PostTitleOfJobDto.builder()
-                        .name("junior1").build();
-                given().cookie(cookie).contentType(ContentType.JSON).body(postTitleOfJob).when().post("/api/job-title");
-
-                //этим методом получаем все jobTitles:
-                    given().cookie(cookie).contentType("application/json").when().get("api/job-title/all")
-                            .then()
-                            .log().all()
-                            .assertThat().statusCode(403);
-                } else {
-                    // Обработка случая, когда аутентификация не удалась
-                    System.out.println("Authentication failed. Cannot proceed with the test.");
-                }
-        // Method that deletes the above jobTitle by "name" from the database, so that it will be passed automatically afterwards
-        // in JENKINS-e and since deleting a user does not delete jobTitle from the table automatically:
-         String name = "junior1";
-         db.executeUpdate("DELETE FROM `job_title` WHERE `name` = '" + name + "';");
-     }*/
-
-    @AfterMethod
+   @AfterMethod
     public static void postConditionRA() throws SQLException {
         String[] args = {"admin1@gmail.com"};
         deleteUser.deleteUserFromDB(args);
