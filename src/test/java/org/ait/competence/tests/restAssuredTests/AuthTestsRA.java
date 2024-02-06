@@ -13,7 +13,7 @@ public class AuthTestsRA extends TestBaseRA {
         // user registration:
         Response response = user.registerUser("user2@gmail.com", "User002!", "superUser2");
         // Check that the query completed successfully:
-        response.then().statusCode(200);
+        response.then().log().all().statusCode(200);
         user.userStatusConfirmed("user2@gmail.com"); //changes the status to CONFIRMED in 2 database tables users, users_aud
         System.out.println("Response body: " + response.getBody().asString());
     }
@@ -32,7 +32,6 @@ public class AuthTestsRA extends TestBaseRA {
                         .then().log().all()
                         .assertThat().statusCode(400)
                         .extract().response().as(RegisterUserWithoutNickNameDto.class);
-        System.out.println(registerUserWithoutNickName.getMessage());
     }
 
     @Test()

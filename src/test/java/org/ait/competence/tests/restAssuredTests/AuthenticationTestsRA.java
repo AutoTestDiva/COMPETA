@@ -17,7 +17,6 @@ public class AuthenticationTestsRA extends TestBaseRA {
 
     @BeforeMethod
     public void preconditionRA() throws SQLException {
-
         // user registration:
         user.registerUser("user2@gmail.com", "User002!", "superUser2");
         user.userStatusConfirmed("user2@gmail.com"); //changes the status to CONFIRMED in 2 database tables users, users_aud
@@ -25,30 +24,25 @@ public class AuthenticationTestsRA extends TestBaseRA {
     }
 
     @Test
-
     public void loginAsUserPositive_code200_TestRA1() { //Login successful
-
         AuthResponseDto responseDto = user.loginUserRA("user2@gmail.com", "User002!")
-                .then()
+                .then().log().all()
                 .assertThat().statusCode(200)
                 .extract().response().as(AuthResponseDto.class);
         System.out.println(responseDto.getMessage());
     }
 
     @Test
-
     public void loginAsUserPositive_code200_TestRA2() { //Login successful
-
         user.loginUserRA("user2@gmail.com", "User002!")
-                .then()
+                .then().log().all()
                 .assertThat().statusCode(200)
                 .assertThat().body("message", containsString("Login successful"));
     }
 
     @Test
     public void loginAsUserWithIncorrectPassword_code401_TestRA1() { //Incorrect username or password
-
-        AuthResponseDto responseDto = user.loginUserRA("user2@gmail.com", "Invalid")
+        AuthResponseDto responseDto = user.loginUserRA("user2@gmail.com", "Invalid000!")
                 .then()
                 .assertThat().statusCode(401)
                 .extract().response().as(AuthResponseDto.class);
@@ -57,8 +51,8 @@ public class AuthenticationTestsRA extends TestBaseRA {
 
     @Test
     public void loginAsUserWithIncorrectPassword_code401_TestRA2() { //Incorrect username or password
-        user.loginUserRA("user2@gmail.com", "Invalid")
-                .then()
+        user.loginUserRA("user2@gmail.com", "Invalid000!")
+                .then().log().all()
                 .assertThat().statusCode(401)
                 .assertThat().body("message", containsString("Incorrect username or password"));
     }
@@ -79,8 +73,10 @@ public class AuthenticationTestsRA extends TestBaseRA {
                 .assertThat().statusCode(200)
                 .assertThat().body("message", containsString("Logout successful"));
     }
-      @AfterMethod
-     public static void postConditionRA() throws SQLException {
+
+
+    @AfterMethod
+    public static void postConditionRA() throws SQLException {
         String[] args = {"user2@gmail.com"};
         deleteUser.deleteUserFromDB(args);
     }
