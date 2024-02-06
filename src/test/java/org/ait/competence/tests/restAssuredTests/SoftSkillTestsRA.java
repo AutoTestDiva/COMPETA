@@ -81,18 +81,7 @@ public class SoftSkillTestsRA extends TestBaseRA {
         }
     }
 
-   /* @Test
-    public void postAddSoftSkill_code403_TestRA() throws SQLException { // не работает, т.к. не воспринимает с БД роль пользователя "BANNED"
-        admin.registerAdmin("admin0@gmail.com", "Admin000!", "superAdmin0");
-        admin.adminStatusBanned("admin0@gmail.com"); //меняет статус на BANNED в 2-х таблицах БД users, users_aud
-        admin.adminRole("admin0@gmail.com"); //присваиваем в базе данных роль АДМИНА
-        cookie = user.getLoginCookie("admin0@gmail.com", "Admin000!");
-        given().cookie(cookie).when().post("/api/soft-skill")
-                .then()
-                .assertThat().statusCode(403);
-    }*/
-
-    @Test()
+   @Test()
     public void postAddSoftSkill_code409_TestRA1() throws SQLException {//SoftSkill already exists
         cookie = user.getLoginCookie("admin1@gmail.com", "Admin001!");
         //It's like a precondition by which we invest a skill in advance:
@@ -191,17 +180,6 @@ public class SoftSkillTestsRA extends TestBaseRA {
         String name = "team work10";
         db.executeUpdate("DELETE FROM `soft_skill` WHERE `name` = '" + name + "';");
     }
-
-   /* @Test
-    public void postAddSoftSkill_code403_TestRA() throws SQLException { // не работает, т.к. не воспринимает с БД роль пользователя "BANNED"
-        admin.registerAdmin("admin0@gmail.com", "Admin000!", "superAdmin0");
-        admin.adminStatusBanned("admin0@gmail.com"); //меняет статус на BANNED в 2-х таблицах БД users, users_aud
-        admin.adminRole("admin0@gmail.com"); //присваиваем в базе данных роль АДМИНА
-        cookie = user.getLoginCookie("admin0@gmail.com", "Admin000!");
-        given().cookie(cookie).when().post("/api/soft-skill")
-                .then()
-                .assertThat().statusCode(403);
-    }*/
 
     @Test
     public void putSoftSkillById_code409_TestRA() throws SQLException {//SoftSkill already exists
