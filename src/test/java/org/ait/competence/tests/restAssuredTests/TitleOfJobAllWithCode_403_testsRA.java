@@ -43,7 +43,7 @@ public class TitleOfJobAllWithCode_403_testsRA extends TestBaseRA{
             given().cookie(cookie).contentType(ContentType.JSON).body(postTitleOfJob).when()
                     .post("/api/job-title").then().log().all().assertThat().statusCode(403);
         }
-    } */
+    }*/
 
     @Test
     public void putUpdateTitleOfJobById_AccessDenied_code403_TestRA() throws SQLException {//Access denied for user with email <{0}> and role {1}
