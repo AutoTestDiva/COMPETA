@@ -21,7 +21,6 @@ public class AuthenticationTestsRA extends TestBaseRA {
         // user registration:
         user.registerUser("user2@gmail.com", "User002!", "superUser2");
         user.userStatusConfirmed("user2@gmail.com"); //changes the status to CONFIRMED in 2 database tables users, users_aud
-
         cookie = user.getLoginCookie("user2@gmail.com", "User002!");
     }
 
@@ -80,9 +79,8 @@ public class AuthenticationTestsRA extends TestBaseRA {
                 .assertThat().statusCode(200)
                 .assertThat().body("message", containsString("Logout successful"));
     }
-
-    @AfterMethod
-    public static void postConditionRA() throws SQLException {
+      @AfterMethod
+     public static void postConditionRA() throws SQLException {
         String[] args = {"user2@gmail.com"};
         deleteUser.deleteUserFromDB(args);
     }

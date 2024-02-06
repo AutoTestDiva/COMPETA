@@ -77,26 +77,6 @@ public class IndustryTestsRA extends TestBaseRA {
             System.out.println("Authentication failed. Cannot proceed with the test.");
         }
     }
- /* @Test
-      public void postAddNewIndustry_code403_TestRA() throws SQLException { // не работает, т.к. не воспринимает с БД роль пользователя "BANNED"
-          admin.registerAdmin("admin0@gmail.com", "Admin000!", "superAdmin0");
-          admin.adminStatusBanned("admin0@gmail.com"); //меняет статус на BANNED в 2-х таблицах БД users, users_aud
-          admin.adminRole("admin0@gmail.com"); //присваиваем в базе данных роль АДМИНА
-          cookie = user.getLoginCookie("admin0@gmail.com", "Admin000!");
-            if (cookie != null) {
-                //This is like a precondition, by which we enter the edu-level in advance:
-               PostIndustryDto postIndustry = PostIndustryDto.builder()
-                .name("education1").build();
-        given().cookie(cookie).contentType(ContentType.JSON).body(postIndustry).when().post("/api/industry")
-                .then()
-                .log().all()
-                .assertThat().statusCode(403);
-        System.out.println(postAddHardSkill.getName());
-            } else {
-                // Handling the case when authentication fails
-                System.out.println("User not authenticated");
-            }
-    }*/
 
     @Test()
     public void postAddNewIndustry_code409_TestRA1() throws SQLException {//Industry with that name already exists
@@ -189,36 +169,7 @@ public class IndustryTestsRA extends TestBaseRA {
         db.executeUpdate("DELETE FROM `industry` WHERE `name` = '" + name + "';");
     }
 
-  /* @Test
-         public void putUpdateIndustryById_AccessDenied_code403_TestRA() throws SQLException {//Access denied for user with email <{0}> and role {1}
-         // не работает, т.к. не воспринимает с БД роль пользователя "BANNED"
-            //вместо предусловия выше, т.к. регистрация с другими параметрами:
-             admin.registerAdmin("admin0@gmail.com", "Admin000!", "superAdmin0");
-             admin.adminStatusBanned("admin0@gmail.com"); //меняет статус на BANNED в 2-х таблицах БД users, users_aud
-             admin.adminRole("admin0@gmail.com"); //присваиваем в базе данных роль АДМИНА
-             cookie = user.getLoginCookie("admin0@gmail.com", "Admin000!");
 
-             if (cookie != null) {
-                 //это словно предусловие, которым заранее вкладываем industry:
-                 PostIndustryDto postIndustry = PostIndustryDto.builder()
-                         .name("education1").build();
-                 given().cookie(cookie).contentType(ContentType.JSON).body(postIndustry).when().post("/api/industry");
-
-                 //этим методом пытаемся обновить уже имеющуюся industry:
-                 String industryId = admin.getIndustryById("education1");
-                 UpdateIndustryDto updateIndustryDto = UpdateIndustryDto.builder()
-                         .name("education2").build();
-                 given().cookie(cookie).contentType(ContentType.JSON).body(updateIndustryDto).when().put("/api/industry/" + industryId)
-                         .then()
-                         .log().all()
-                         .assertThat().statusCode(403);
-             } else {
-                System.out.println("User not authenticated");
-             }
-       // deleting an already existing industry:
-       String name = "education1";
-       db.executeUpdate("DELETE FROM `industry` WHERE `name` = '" + name + "';");
-   }*/
 
     @Test
     public void putUpdateIndustryById_code404_TestRA() throws SQLException { //Industry not found
@@ -322,34 +273,6 @@ public class IndustryTestsRA extends TestBaseRA {
         db.executeUpdate("DELETE FROM `industry` WHERE `name` = '" + name + "';");
     }
 
-  /*  @Test
-    public void getListOfIndustries_code403_TestRA() throws SQLException { // не работает, т.к. не воспринимает с БД роль пользователя "BANNED"
-        //вместо предусловия выше, т.к. регистрация с другими параметрами:
-        admin.registerAdmin("admin0@gmail.com", "Admin000!", "superAdmin0");
-        admin.adminStatusBanned("admin0@gmail.com"); //Changes the status to BANNED in 2 database tables users, users_aud
-        admin.adminRole("admin0@gmail.com"); //Аssign the ADMIN role in the database
-        cookie = user.getLoginCookie("admin0@gmail.com", "Admin000!");
-
-        if (cookie != null) {
-            //это словно предусловие, которым я первоначально вкладываю industry:
-            PostIndustryDto postIndustry = PostIndustryDto.builder()
-                    .name("education1").build();
-            given().cookie(cookie).contentType(ContentType.JSON).body(postIndustry).when().post("/api/industry");
-
-            //этим методом получаем все industries:
-            given().cookie(cookie).contentType("application/json").when().get("api/industry/all")
-                    .then()
-                    .log().all()
-                    .assertThat().statusCode(403);
-        } else {
-             System.out.println("Authentication failed. Cannot proceed with the test.");
-        }
-        //The  method that deletes the above mentioned profession by "name" from the database, so that it will be passed automatically afterwards
-        //in JENKINS-e and since deleting a user does not delete the profession from the table automatically:
-        String name = "education1";
-        db.executeUpdate("DELETE FROM `industry` WHERE `name` = '" + name + "';");
-    }*/
-
     @Test
     public void deleteIndustryById_code200_TestRA() throws SQLException { //Industry deleted
         cookie = user.getLoginCookie("admin1@gmail.com", "Admin001!");
@@ -387,34 +310,6 @@ public class IndustryTestsRA extends TestBaseRA {
             System.out.println("Authentication failed. Cannot proceed with the test.");
         }
     }
-
-     /*  @Test
-    public void deleteIndustryById_code403_TestRA() throws SQLException { // не работает, т.к. не воспринимает с БД роль пользователя "BANNED"
-        //вместо предусловия выше, т.к. регистрация с другими параметрами:
-        admin.registerAdmin("admin0@gmail.com", "Admin000!", "superAdmin0");
-        admin.adminStatusBanned("admin0@gmail.com"); //меняет статус на BANNED в 2-х таблицах БД users, users_aud
-        admin.adminRole("admin0@gmail.com"); //присваиваем в базе данных роль АДМИНА
-        cookie = user.getLoginCookie("admin0@gmail.com", "Admin000!");
-
-        if (cookie != null) {
-             //это словно предусловие, которым я первоначально вкладываю industry:
-            PostIndustryDto postIndustry = PostIndustryDto.builder()
-                    .name("education1").build();
-            given().cookie(cookie).contentType(ContentType.JSON).body(postIndustry).when().post("/api/industry");
-
-            //этим методом пытаемся удалить industry:
-            String industryId = admin.getIndustryById("education1");
-            given().cookie(cookie).contentType(ContentType.JSON).when().delete("/api/industry/" + industryId)
-                    .then()
-                    .log().all()
-                    .assertThat().statusCode(403);
-          } else {
-             System.out.println("Authentication failed. Cannot proceed with the test.");
-        }
-           // вариант удаления уже имеющегося industry:
-           String industryId = admin.getIndustryById("education1");
-           given().cookie(cookie).contentType(ContentType.JSON).when().delete("/api/industry/" + industryId);
-       }*/
 
     @Test
     public void deleteIndustryById_code404_TestRA() throws SQLException { //Industry not found

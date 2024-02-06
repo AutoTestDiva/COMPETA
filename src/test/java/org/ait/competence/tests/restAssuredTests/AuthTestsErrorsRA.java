@@ -32,7 +32,7 @@ public class AuthTestsErrorsRA extends TestBaseRA {
     }
 
     @AfterMethod
-    public static void postConditionRA() throws SQLException {
+     public static void postConditionRA() throws SQLException {
         String[] args = {"user2@gmail.com"};
         deleteUser.deleteUserFromDB(args);
     }

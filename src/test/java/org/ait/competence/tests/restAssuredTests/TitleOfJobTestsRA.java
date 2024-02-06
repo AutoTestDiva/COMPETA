@@ -81,18 +81,7 @@ public class TitleOfJobTestsRA extends TestBaseRA {
             System.out.println("Authentication failed. Cannot proceed with the test.");
         }
     }
-
-    /* @Test
-      public void postAddNewTitleOfJob_code403_TestRA() throws SQLException { // не работает, т.к. не воспринимает с БД роль пользователя "BANNED"
-          admin.registerAdmin("admin0@gmail.com", "Admin000!", "superAdmin0");
-          admin.adminStatusBanned("admin0@gmail.com"); //меняет статус на BANNED в 2-х таблицах БД users, users_aud
-          admin.adminRole("admin0@gmail.com"); //присваиваем в базе данных роль АДМИНА
-          cookie = user.getLoginCookie("admin0@gmail.com", "Admin000!");
-          given().cookie(cookie).when().post("/api/job-title")
-                  .then()
-                  .assertThat().statusCode(403);
-      }*/
-    @Test()
+     @Test()
     public void postAddNewTitleOfJob_code409_TestRA1() throws SQLException {//JobTitle with that name already exists
         cookie = user.getLoginCookie("admin1@gmail.com", "Admin001!");
         //It's like a precondition that we put a jobTitle in beforehand:
@@ -192,41 +181,7 @@ public class TitleOfJobTestsRA extends TestBaseRA {
         String name = "junior1";
         db.executeUpdate("DELETE FROM `job_title` WHERE `name` = '" + name + "';");
     }
-
-    /*   @Test
-         public void putUpdateTitleOfJobById_AccessDenied_code403_TestRA() throws SQLException {//Access denied for user with email <{0}> and role {1}
-         // не работает, т.к. не воспринимает с БД роль пользователя "BANNED"
-            //вместо предусловия выше, т.к. регистрация с другими параметрами:
-             admin.registerAdmin("admin0@gmail.com", "Admin000!", "superAdmin0");
-             admin.adminStatusBanned("admin0@gmail.com"); //меняет статус на BANNED в 2-х таблицах БД users, users_aud
-             admin.adminRole("admin0@gmail.com"); //присваиваем в базе данных роль АДМИНА
-             cookie = user.getLoginCookie("admin0@gmail.com", "Admin000!");
-
-             if (cookie != null) {
-                 //это словно предусловие, которым заранее вкладываем jobTitle:
-                 PostTitleOfJobDto postTitleOfJob = PostTitleOfJobDto.builder()
-                         .name("junior1").build();
-                 given().cookie(cookie).contentType(ContentType.JSON).body(postTitleOfJob).when().post("/api/job-title");
-
-                 //этим методом я пытаюсь обновить уже имеющуюся jobTitle:
-                 String jobTitleId = admin.getJobTitleIdById("junior1");
-                 UpdateTitleOfJobDto updateTitleOfJobDto = UpdateTitleOfJobDto.builder()
-                         .name("junior2")
-                         .build();
-                 given().cookie(cookie).contentType(ContentType.JSON).body(updateTitleOfJobDto).when().put("/api/job-title/" + jobTitleId)
-                         .then()
-                         .log().all()
-                         .assertThat().statusCode(403);
-             } else {
-                 // Handling the case when authentication fails
-                 System.out.println("User not authenticated");
-             }
-           // метод, удаляющий с базы данных выше указанный jobTitle по "name", чтоб потом автоматом проходил
-           //в JENKINS-e и т.к. удаление юзера не удаляет jobTitle с таблицы автоматом:
-           String name = "junior1";
-           db.executeUpdate("DELETE FROM `job_title` WHERE `name` = '" + name + "';");
-         }*/
-    @Test
+       @Test
     public void putUpdateTitleOfJobById_code404_TestRA() throws SQLException { //Title of job not found
         cookie = user.getLoginCookie("admin1@gmail.com", "Admin001!");
 
