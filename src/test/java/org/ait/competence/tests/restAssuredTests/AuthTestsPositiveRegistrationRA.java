@@ -28,7 +28,6 @@ public class AuthTestsPositiveRegistrationRA extends TestBaseRA {
     @AfterMethod
     public static void postConditionRA() throws SQLException {
         String[] args = {"user2@gmail.com"};
-
         deleteUser.deleteUserFromDB(args);
     }
 }

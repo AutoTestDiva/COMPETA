@@ -1,39 +1,25 @@
 package org.ait.competence.tests.restAssuredTests;
 
-import org.ait.competence.dto.ExistEmailResponseDto;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
+import org.ait.competence.dto.RegisterUserWithoutNickNameDto;
 import org.testng.annotations.Test;
 
 import java.sql.SQLException;
 
 public class AuthTestsErrorsRA extends TestBaseRA {
-    @BeforeMethod
-    public void preconditionRA() throws SQLException {
-        // user registration:
-        user.registerUser("user2@gmail.com", "User002!", "superUser2");
-        user.userStatusConfirmed("user2@gmail.com"); //changes the status to CONFIRMED in 2 database tables users, users_aud
-    }
-
     @Test()
-    public void registerUserWithExistEmail_400_TestRA1() throws SQLException { //User with this email already exists
-        ExistEmailResponseDto existEmail = user.registerUser("user2@gmail.com", "User002!", "superUser2")
-                .then()
+    public void registerUserWithoutNickName_400_TestRA1() throws SQLException { // Validation errors
+        RegisterUserWithoutNickNameDto registerUserWithoutNickName =
+                user.registerUserWithoutNickName_code400("user2@gmail.com", "User002!")
+                .then().log().all()
                 .assertThat().statusCode(400)
-                .extract().response().as(ExistEmailResponseDto.class);
-        System.out.println(existEmail.getMessage());
+                .extract().response().as(RegisterUserWithoutNickNameDto.class);
+        System.out.println(registerUserWithoutNickName.getMessage());
     }
 
     @Test()
-    public void registerUserWithExistEmail_400_TestRA2() throws SQLException { //User with this email already exists
-        user.registerUser("user2@gmail.com", "User002!", "superUser2")
-                .then()
+    public void registerUserWithoutNickName_400_TestRA2() throws SQLException { //Validation errors
+        user.registerUserWithoutNickName_code400("user2@gmail.com", "User002!")
+                .then().log().all()
                 .assertThat().statusCode(400);
-    }
-
-    @AfterMethod
-     public static void postConditionRA() throws SQLException {
-        String[] args = {"user2@gmail.com"};
-        deleteUser.deleteUserFromDB(args);
     }
 }

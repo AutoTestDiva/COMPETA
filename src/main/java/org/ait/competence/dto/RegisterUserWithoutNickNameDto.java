@@ -1,5 +1,6 @@
 package org.ait.competence.dto;
 
+import ch.qos.logback.classic.spi.ThrowableProxyUtil;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,6 +10,6 @@ import lombok.ToString;
 @Getter
 @ToString
 @Builder
-public class ExistEmailResponseDto {
+public class RegisterUserWithoutNickNameDto {
     private String message;
 }

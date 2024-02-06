@@ -4,6 +4,7 @@ import io.restassured.http.ContentType;
 import io.restassured.http.Cookie;
 import io.restassured.response.Response;
 import org.ait.competence.dto.NewUserDto;
+import org.ait.competence.dto.NewUserWithoutNickNameDto;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -64,6 +65,19 @@ public class UserHelperRA extends BaseHelperRA {
                 .when()
                 .post("/api/auth/register");
     }
+
+    public Response registerUserWithoutNickName_code400(String email, String password) {
+        NewUserWithoutNickNameDto user = NewUserWithoutNickNameDto.builder()
+                .email(email)
+                .password(password)
+                .build();
+        return given()
+                .contentType(ContentType.JSON)
+                .body(user)
+                .when()
+                .post("/api/auth/register");
+    }
+
 
     public static String getUserIdByEmail(String email) throws SQLException {
         String userId;

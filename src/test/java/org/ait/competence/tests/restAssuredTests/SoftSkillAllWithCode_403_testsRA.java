@@ -2,9 +2,7 @@ package org.ait.competence.tests.restAssuredTests;
 
 import io.restassured.http.ContentType;
 import io.restassured.http.Cookie;
-import org.ait.competence.dto.PostAllProfessionsDto;
 import org.ait.competence.dto.PostAllSoftSkillDto;
-import org.ait.competence.dto.UpdateProfessionNameDto;
 import org.ait.competence.dto.UpdateSoftSkillNameDto;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
