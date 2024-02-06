@@ -11,7 +11,7 @@ public class LandingPage extends BasePage {
     private final JavascriptExecutor js;
 
     public LandingPage(WebDriver driver, JavascriptExecutor js) {
-        super(driver);
+        super(driver, js);
         this.js = js;
     }
 
@@ -27,7 +27,7 @@ public class LandingPage extends BasePage {
             e.printStackTrace();
         }
 
-        return new LogInPage(driver);
+        return new LogInPage(driver, js);
     }
 
 }
