@@ -20,7 +20,7 @@ public class UserTestsRA extends TestBaseRA{
         cookie = user.getLoginCookie("user2@gmail.com", "User002!");
     }
     @Test
-    public void putUserPasswordReset_code200_TestRA1() { //Password Reset Successful
+    public void putResetUserPassword_code200_TestRA1() { // OK
        ResetUserPasswordDto resetUserPassword= ResetUserPasswordDto.builder()
                 .oldPassword("User002!")
                 .newPassword("NewPassword002!")
@@ -29,13 +29,13 @@ public class UserTestsRA extends TestBaseRA{
                 .cookie(cookie)
                 .contentType(ContentType.JSON)
                 .body(resetUserPassword)
-                . when()
+                .when()
                 .put("/api/user/password-reset")
-                .then()
+                .then().log().all()
                 .assertThat().statusCode(200);
     }
     @Test
-    public void putNewPasswordEqualsOld_code400_TestRA1() { //Validation errors
+    public void putNewPasswordEqualsOld_code400_TestRA1() { //Invalid new password format, or New password is equals old password, or Incorrect old password.
         ResetUserPasswordDto resetUserPassword= ResetUserPasswordDto.builder()
                 .oldPassword("User002!")
                 .newPassword("User002!")
@@ -44,37 +44,37 @@ public class UserTestsRA extends TestBaseRA{
                 .cookie(cookie)
                 .contentType(ContentType.JSON)
                 .body(resetUserPassword)
-                . when()
+                .when()
                 .put("/api/user/password-reset")
-                .then()
+                .then().log().all()
                 .assertThat().statusCode(400);
     }
 
     @Test
     public void putUserNotAuthenticated_code401_TestRA1() { //User not authenticated
        ResetUserPasswordDto resetUserPassword= ResetUserPasswordDto.builder()
-                .oldPassword("User002!")
+                .oldPassword("WrongOldPassword002!")
                 .newPassword("NewPassword002!")
                 .build();
         given()
                 .contentType(ContentType.JSON)
                 .body(resetUserPassword)
-                . when()
+                .when()
                 .put("/api/user/password-reset")
-                .then()
+                .then().log().all()
                 .assertThat().statusCode(401);
     }
     @Test
     public void getUserProfile_code200_TestRA(){ //User Profile
         given().contentType(ContentType.JSON).cookie(cookie).when().get("/api/user/me")
-                .then()
+                .then().log().all()
                 .assertThat().statusCode(200)
                 .assertThat().body("email", containsString("user2@gmail.com"));
     }
     @Test
     public void getUserProfileNotAuthenticated_code401_TestRA(){ //User not authenticated
         given().contentType(ContentType.JSON).when().get("/api/user/me")
-                .then()
+                .then().log().all()
                 .assertThat().statusCode(401);
     }
 
@@ -98,7 +98,7 @@ public class UserTestsRA extends TestBaseRA{
         String userId = user.getUserIdByEmail("invalid@gmail.com");
         String userConfirmCode = user.getUserConfirmCodeById(userId);
         given().cookie(cookie).contentType(ContentType.JSON).when().get("/api/user/email-confirmation/" + userConfirmCode)
-                .then()
+                .then().log().all()
                 .assertThat().statusCode(404);
     }
 
@@ -107,8 +107,9 @@ public class UserTestsRA extends TestBaseRA{
         String userId = user.getUserIdByEmail("user2@gmail.com");
         String userConfirmCode = user.getUserConfirmCodeById(userId);
         given().cookie(cookie).contentType(ContentType.JSON).when().get("/api/user/email-confirmation/" + userConfirmCode);
+
         given().cookie(cookie).contentType(ContentType.JSON).when().get("/api/user/email-confirmation/" + userConfirmCode)
-                .then()
+                .then().log().all()
                 .assertThat().statusCode(409);
     }
     @AfterMethod

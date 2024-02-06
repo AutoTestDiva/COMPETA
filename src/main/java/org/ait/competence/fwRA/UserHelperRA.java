@@ -78,7 +78,6 @@ public class UserHelperRA extends BaseHelperRA {
                 .post("/api/auth/register");
     }
 
-
     public static String getUserIdByEmail(String email) throws SQLException {
         String userId;
         try {
