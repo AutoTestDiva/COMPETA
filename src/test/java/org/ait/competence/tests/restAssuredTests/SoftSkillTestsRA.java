@@ -127,10 +127,10 @@ public class SoftSkillTestsRA extends TestBaseRA {
     @Test
     public void putUpdateSoftSkillById_code401_TestRA() throws SQLException { //User not authenticated
         cookie = user.getLoginCookie("admin1@gmail.com", "Admin001!");
-
         //It's like a precondition by which we initially invest the skillet:
         PostAllSoftSkillDto postAllSoftSkill = PostAllSoftSkillDto.builder().name("team work1").build();
-        given().cookie(cookie).contentType(ContentType.JSON).body(postAllSoftSkill).when().post("/api/soft-skill");
+        given().cookie(cookie).contentType(ContentType.JSON).body(postAllSoftSkill).when()
+                .post("/api/soft-skill");
 
         //сам метод
         String softSkillId = admin.getSoftSkillById("team work1");
@@ -139,10 +139,12 @@ public class SoftSkillTestsRA extends TestBaseRA {
         String userEmail = "admin1@gmail.com";
         if ("another@gmail.com".equals(userEmail)) {//не вписываем cookie
             given().contentType(ContentType.JSON).body(updateSoftSkillNameDto).when()
-                    .put("/api/soft-skill/" + softSkillId).then().log().all().assertThat().statusCode(200);
+                    .put("/api/soft-skill/" + softSkillId).then().log().all().assertThat()
+                    .statusCode(200);
         } else {
             given().contentType(ContentType.JSON).body(updateSoftSkillNameDto).when()
-                    .put("/api/soft-skill/" + softSkillId).then().log().all().assertThat().statusCode(401);
+                    .put("/api/soft-skill/" + softSkillId).then().log().all().assertThat()
+                    .statusCode(401);
         }
 
         //Method to delete the above soft-skill by "name" from the database, so that it will be automatically passed later on
@@ -163,11 +165,13 @@ public class SoftSkillTestsRA extends TestBaseRA {
         String softSkillId = admin.getSoftSkillById("team work1");
         UpdateSoftSkillNameDto updateSoftSkillNameDto = UpdateSoftSkillNameDto.builder()
                 .name("team work1").build();
-        given().cookie(cookie).contentType(ContentType.JSON).body(updateSoftSkillNameDto).when().put("/api/soft-skill/" + softSkillId)
-                .then().log().all().assertThat().statusCode(409);
+        given().cookie(cookie).contentType(ContentType.JSON).body(updateSoftSkillNameDto).when()
+                .put("/api/soft-skill/" + softSkillId).then().log().all().assertThat()
+                .statusCode(409);
 
         // The second option of deleting an already existing soft-skill (not through the database):
-        given().cookie(cookie).contentType(ContentType.JSON).when().delete("/api/soft-skill/" + softSkillId);
+        given().cookie(cookie).contentType(ContentType.JSON).when()
+                .delete("/api/soft-skill/" + softSkillId);
     }
 
     @Test
@@ -175,15 +179,17 @@ public class SoftSkillTestsRA extends TestBaseRA {
         cookie = user.getLoginCookie("admin1@gmail.com", "Admin001!");
         //It's like a precondition by which we initially invest the skillet:
         PostAllSoftSkillDto postAllSoftSkill = PostAllSoftSkillDto.builder().name("team work1").build();
-        given().cookie(cookie).contentType(ContentType.JSON).body(postAllSoftSkill).when().post("/api/soft-skill");
+        given().cookie(cookie).contentType(ContentType.JSON).body(postAllSoftSkill).when()
+                .post("/api/soft-skill");
 
         //Use this method to get all the skills:
-        given().cookie(cookie).contentType(ContentType.JSON).when().get("api/soft-skill").then().log().all()
-                .assertThat().statusCode(200);
+        given().cookie(cookie).contentType(ContentType.JSON).when().get("api/soft-skill").then()
+                .log().all().assertThat().statusCode(200);
 
         // The option of deleting an already existing soft-skill (not through the database):
         String softSkillId = admin.getSoftSkillById("team work1");
-        given().cookie(cookie).contentType(ContentType.JSON).when().delete("/api/soft-skill/" + softSkillId);
+        given().cookie(cookie).contentType(ContentType.JSON).when()
+                .delete("/api/soft-skill/" + softSkillId);
     }
 
     @Test
