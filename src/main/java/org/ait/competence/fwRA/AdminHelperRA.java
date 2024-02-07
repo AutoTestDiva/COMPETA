@@ -6,6 +6,7 @@ import io.restassured.response.Response;
 import org.ait.competence.dto.NewAdminDto;
 import org.ait.competence.dto.NewUserDto;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import static io.restassured.RestAssured.given;
@@ -165,4 +166,16 @@ public class AdminHelperRA extends BaseHelperRA {
     }
 
 
+    public String getProfessionIdByName(String name) throws SQLException {
+        String professionId = null;
+        try {
+            ResultSet resultSet = db.requestSelect("SELECT id FROM profession WHERE name = '" + name + "';");
+            if (resultSet.next()) {
+                professionId = resultSet.getString(1);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error while getting profession ID: " + e);
+        }
+        return professionId;
+    }
 }
