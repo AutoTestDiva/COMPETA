@@ -11,9 +11,7 @@ import lombok.ToString;
 @Builder
 public class PutUserProfileDto {
 
-    private String nickName;
     private String firstName;
     private String lastName;
-    private String email;
-// private String roles;
+
 }

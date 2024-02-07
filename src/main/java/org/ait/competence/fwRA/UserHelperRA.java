@@ -5,6 +5,7 @@ import io.restassured.http.Cookie;
 import io.restassured.response.Response;
 import org.ait.competence.dto.NewUserDto;
 import org.ait.competence.dto.NewUserWithoutNickNameDto;
+import org.ait.competence.dto.PutUserProfileDto;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
