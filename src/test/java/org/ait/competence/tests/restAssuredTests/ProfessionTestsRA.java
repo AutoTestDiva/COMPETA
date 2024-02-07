@@ -2,12 +2,8 @@ package org.ait.competence.tests.restAssuredTests;
 
 import io.restassured.http.ContentType;
 import io.restassured.http.Cookie;
-import io.restassured.response.Response;
 import org.ait.competence.dto.PostAllProfessionsDto;
-import org.ait.competence.dto.PostAllSoftSkillDto;
 import org.ait.competence.dto.UpdateProfessionNameDto;
-import org.ait.competence.dto.UpdateSoftSkillNameDto;
-import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -147,7 +143,7 @@ public class ProfessionTestsRA extends TestBaseRA {
         }
     }
 
- /*   @Test
+ /*  @Test //возможно баг
     public void putUpdateProfessionById_code404_TestRA() throws SQLException { //Profession not found
         cookie = user.getLoginCookie("admin1@gmail.com", "Admin001!");
         //This is like a precondition, by which we enter the profession in advance:
@@ -165,7 +161,7 @@ public class ProfessionTestsRA extends TestBaseRA {
         //in JENKINS-e and since deleting a user does not delete the profession from the table automatically:
         String name = "programmer1";
         db.executeUpdate("DELETE FROM `profession` WHERE `name` = '" + name + "';");
-    }  */
+    }*/
 
     @Test
     public void putUpdateProfessionById_code409_TestRA() throws SQLException {//Profession with that name already exists
