@@ -25,7 +25,7 @@ public class EduLevelTestsRA extends TestBaseRA{
     public void postAddNewEduLevel_code201_TestRA1() throws SQLException { //Education level added
         cookie = user.getLoginCookie("admin1@gmail.com", "Admin001!");
         PostAddNewEduLevelDto postAddNewEduLevel = PostAddNewEduLevelDto.builder()
-                .name("higher education13")
+                .name("higher education1")
                 .build();
         given()
                 .cookie(cookie)
@@ -39,7 +39,7 @@ public class EduLevelTestsRA extends TestBaseRA{
         System.out.println(postAddNewEduLevel.getName());
 
         // The variant of deleting an already existing eduLevel (not through the database):
-        String eduLevelId = admin.getEduLevelById("higher education13");
+        String eduLevelId = admin.getEduLevelById("higher education1");
         given().cookie(cookie).contentType(ContentType.JSON).when().delete("/api/edu-level/" + eduLevelId);
     }
 
@@ -55,18 +55,18 @@ public class EduLevelTestsRA extends TestBaseRA{
 
     @Test()
     public void postAddNewEduLevel_WithInvalidEmail_code401_TestRA1() throws SQLException { //User not authenticated
-        cookie = user.getLoginCookie("invalid@gmail.com", "Admin001!"); //enter the wrong mail
-        if (cookie != null) {
-            //It's like a precondition that we put in beforehand:
-            PostAddNewEduLevelDto postAddNewEduLevel = PostAddNewEduLevelDto.builder()
-                    .name("higher education").build();
-            given().cookie(cookie).contentType(ContentType.JSON).body(postAddNewEduLevel).when().post("/api/edu-level");
-            given().cookie(cookie).contentType(ContentType.JSON).when().post("/api/edu-level")
-                    .then().log().all()
-                    .assertThat().statusCode(401);
-        } else {
-           System.out.println("Authentication failed. Cannot proceed with the test.");
-        }
+        cookie = user.getLoginCookie("admin1@gmail.com", "Admin001!");
+        PostAddNewEduLevelDto postAddNewEduLevel = PostAddNewEduLevelDto.builder()
+                .name("higher education1")
+                .build();
+        given()
+                .contentType("application/json")
+                .body(postAddNewEduLevel)
+                .when()
+                .post("/api/edu-level")
+                .then()
+                .log().all()
+                .assertThat().statusCode(401);
     }
 
     @Test()
@@ -79,7 +79,8 @@ public class EduLevelTestsRA extends TestBaseRA{
 
         //With this method we are trying to re-invest the existing industry:
         given().cookie(cookie).contentType(ContentType.JSON).body(postAddNewEduLevel).when().post("/api/edu-level")
-                .then().assertThat().statusCode(409);
+                .then().log().all().assertThat().statusCode(409);
+
 
         // The variant of deleting an already existing eduLevel (not through the database):
         String eduLevelId = admin.getEduLevelById("higher education");
@@ -118,9 +119,9 @@ public class EduLevelTestsRA extends TestBaseRA{
         given().cookie(cookie).contentType(ContentType.JSON).body(postAddNewEduLevel).when().post("/api/edu-level");
 
         //Using this method, try to update an existing industry with the wrong "name" in the path ("path"):
-        String eduLevelId = admin.getEduLevelById("invalidName");
+        String eduLevelId = admin.getEduLevelById("higher education");
         UpdateEduLevelDto updateEduLevelDto = UpdateEduLevelDto.builder()
-                .name("school education").build();
+                .name("").build();
         given().cookie(cookie).contentType(ContentType.JSON).body(updateEduLevelDto).when().put("/api/edu-level/" + eduLevelId)
                 .then()
                 .log().all()
@@ -133,54 +134,45 @@ public class EduLevelTestsRA extends TestBaseRA{
 
     @Test
     public void putUpdateEduLevelById_code401_TestRA() throws SQLException { //User not authenticated
-        cookie = user.getLoginCookie("admin1@gmail.com", "Invalid1!"); //enter incorrect password
-        if (cookie != null) {
-            //It's like a precondition that we put in beforehand:
-            PostAddNewEduLevelDto postAddNewEduLevel = PostAddNewEduLevelDto.builder()
-                    .name("higher education").build();
-            given().cookie(cookie).contentType(ContentType.JSON).body(postAddNewEduLevel).when().post("/api/edu-level");
+        cookie = user.getLoginCookie("admin1@gmail.com", "Admin001!");
+        //It's like a precondition that we put in beforehand:
+        PostAddNewEduLevelDto postAddNewEduLevel = PostAddNewEduLevelDto.builder()
+                .name("higher education").build();
+        given().cookie(cookie).contentType(ContentType.JSON).body(postAddNewEduLevel).when().post("/api/edu-level");
 
-            //Using this method, try to update an existing industry with an incorrect edu-level in cookies:
-            String eduLevelId = admin.getEduLevelById("higher education");
-            UpdateEduLevelDto updateEduLevelDto = UpdateEduLevelDto.builder()
-                    .name("school education").build();
-            given().cookie(cookie).contentType(ContentType.JSON).body(updateEduLevelDto).when().put("/api/edu-level/" + eduLevelId)
-                    .then()
-                    .log().all()
-                    .assertThat().statusCode(401);
-        } else {
-            // Handling the case when authentication fails:
-            System.out.println("User not authenticated");
-        }
-        // deleting an already existing edu-level:
-        String name = "higher education";
+        //Using this method we try to re-enter an already existing edu-level:
+        String eduLevelId = admin.getEduLevelById("higher education");
+        UpdateEduLevelDto updateEduLevelDto = UpdateEduLevelDto.builder()
+                .name("school education").build();
+        given().contentType(ContentType.JSON).body(updateEduLevelDto).when().put("/api/edu-level/" + eduLevelId)
+                .then()
+                .log().all()
+                .assertThat().statusCode(401);
+
+        // deleting an already existing industry:
+        String name = "school education";
         db.executeUpdate("DELETE FROM `edu_level` WHERE `name` = '" + name + "';");
     }
     @Test
     public void putUpdateEduLevelById_code404_TestRA() throws SQLException { //Education level not found
         cookie = user.getLoginCookie("admin1@gmail.com", "Admin001!");
+        //It's like a precondition that we put in beforehand:
+        PostAddNewEduLevelDto postAddNewEduLevel = PostAddNewEduLevelDto.builder()
+                .name("higher education").build();
+        given().cookie(cookie).contentType(ContentType.JSON).body(postAddNewEduLevel).when().post("/api/edu-level");
 
-        // Get the identifier of an existing edu-level or null if there is no such industry:
-        String eduLevelId = admin.getEduLevelById("higher education");
+        //Using this method we try to re-enter an already existing edu-level:
+        UpdateEduLevelDto updateEduLevelDto = UpdateEduLevelDto.builder()
+                .name("school education").build();
+        given().cookie(cookie).contentType(ContentType.JSON).body(updateEduLevelDto).when().put("/api/edu-level/" + Integer.MAX_VALUE)//в пути указываем несуществующий id несуществующей edu-level
+                .then()
+                .log().all()
+                .assertThat().statusCode(404);
 
-        if (eduLevelId == null) {
-            System.out.println("Education with name 'higher education' not found");
-        } else {
-            // Error: Trying to update an edu-level that exists
-            UpdateEduLevelDto updateEduLevelDto = UpdateEduLevelDto.builder()
-                    .name("school education").build();
-
-            //Send a PUT request with an existing edu-level identifier
-            Response response =  given().cookie(cookie).contentType(ContentType.JSON).body(updateEduLevelDto)
-                    .when().put("/api/edu-level/" + eduLevelId);
-
-            // Print the whole response for details
-            System.out.println("Response: " + response.asString());
-
-            // Check that the response code is 404
-            response.then().log().all().assertThat().statusCode(404);
+        // deleting an already existing industry:
+        String name = "school education";
+        db.executeUpdate("DELETE FROM `edu_level` WHERE `name` = '" + name + "';");
         }
-    }
 
     @Test
     public void putUpdateEduLevelById_code409_TestRA() throws SQLException {//EduLevel with that name already exists
@@ -223,24 +215,21 @@ public class EduLevelTestsRA extends TestBaseRA{
     }
     @Test
     public void getListOfEduLevel_code401_TestRA() throws SQLException {     //User not authenticated
-        cookie = user.getLoginCookie("invalid@gmail.com", "Admin001!"); //enter wrong mail
-        if (cookie != null) {
-            //It's like a precondition by which we initially invest the edu-level:
-            PostAddNewEduLevelDto postAddNewEduLevel = PostAddNewEduLevelDto.builder()
-                    .name("higher education").build();
-            given().cookie(cookie).contentType(ContentType.JSON).body(postAddNewEduLevel).when().post("/api/edu-level");
+        cookie = user.getLoginCookie("admin1@gmail.com", "Admin001!");
+        //It's like a precondition by which we initially invest the edu-level:
+        PostAddNewEduLevelDto postAddNewEduLevel = PostAddNewEduLevelDto.builder()
+                .name("higher education").build();
+        given().cookie(cookie).contentType(ContentType.JSON).body(postAddNewEduLevel).when().post("/api/edu-level");
 
-            //By this method we get all edu-levels:
-            given().cookie(cookie).contentType("application/json").when().get("api/edu-level/all")
-                    .then()
-                    .log().all()
-                    .assertThat().statusCode(401);
-        } else {
-            System.out.println("Authentication failed. Cannot proceed with the test.");
-        }
-        // deleting an already existing edu-level:
-        String name = "higher education";
-        db.executeUpdate("DELETE FROM `edu_level` WHERE `name` = '" + name + "';");
+        //By this method we get all edu-level:
+        given().contentType("application/json").when().get("api/edu-level/all")
+                .then()
+                .log().all()
+                .assertThat().statusCode(401);
+
+        // The variant of deleting an already existing eduLevel (not through the database):
+        String eduLevelId = admin.getEduLevelById("higher education");
+        given().cookie(cookie).contentType(ContentType.JSON).when().delete("/api/edu-level/" + eduLevelId);
     }
 
     @Test
@@ -261,37 +250,40 @@ public class EduLevelTestsRA extends TestBaseRA{
 
     @Test
     public void deleteEduLevelById_code401_TestRA() throws SQLException {//User not authenticated
-        cookie = user.getLoginCookie("invalid@gmail.com", "Admin001!");//enter wrong mail
-        if (cookie != null) {
-            //It's like a precondition by which we initially invest the edu-level:
-            PostAddNewEduLevelDto postAddNewEduLevel = PostAddNewEduLevelDto.builder()
-                    .name("higher education").build();
-            given().cookie(cookie).contentType(ContentType.JSON).body(postAddNewEduLevel).when().post("/api/edu-level");
+        cookie = user.getLoginCookie("admin1@gmail.com", "Admin001!");
+        //It's like a precondition by which we initially invest the edu-level:
+        PostAddNewEduLevelDto postAddNewEduLevel = PostAddNewEduLevelDto.builder()
+                .name("higher education").build();
+        given().cookie(cookie).contentType(ContentType.JSON).body(postAddNewEduLevel).when().post("/api/edu-level");
 
-            //With this method we delete an already existing  edu-level:
-            String eduLevelId = admin.getEduLevelById("higher education");
-            given().cookie(cookie).contentType(ContentType.JSON).when().delete("/api/edu-level/" + eduLevelId)
-                    .then()
-                    .log().all()
-                    .assertThat().statusCode(401);
-        } else {
-            System.out.println("Authentication failed. Cannot proceed with the test.");
-        }
+        //With this method we delete an already existing edu-level:
+        String eduLevelId = admin.getEduLevelById("higher education");
+        given().contentType(ContentType.JSON).when().delete("/api/edu-level/" + eduLevelId)
+                .then()
+                .log().all()
+                .assertThat().statusCode(401);
+
+        // The variant of deleting an already existing eduLevel (not through the database):
+        given().cookie(cookie).contentType(ContentType.JSON).when().delete("/api/edu-level/" + eduLevelId);
     }
     @Test
     public void deleteEduLevelById_code404_TestRA() throws SQLException { //Education level not found
         cookie = user.getLoginCookie("admin1@gmail.com", "Admin001!");
+        //It's like a precondition by which we initially invest the edu-level:
+        PostAddNewEduLevelDto postAddNewEduLevel = PostAddNewEduLevelDto.builder()
+                .name("higher education").build();
+        given().cookie(cookie).contentType(ContentType.JSON).body(postAddNewEduLevel).when().post("/api/edu-level");
 
-        // Get the identifier of the existing industry or null, if there is no such edu-level:
+        //With this method we delete an already existing edu-level:
+
+        given().cookie(cookie).contentType(ContentType.JSON).when().delete("/api/edu-level/" + Integer.MAX_VALUE)//в пути указываем несуществующий id несуществующей edu-level
+                .then()
+                .log().all()
+                .assertThat().statusCode(404);
+
+        // The variant of deleting an already existing eduLevel (not through the database):
         String eduLevelId = admin.getEduLevelById("higher education");
-        if (eduLevelId == null) {
-            System.out.println("Education Level with id 'higher education' does not found");
-        } else {
-            given().cookie(cookie).contentType(ContentType.JSON).when().delete("/api/edu-level/" + eduLevelId)
-                    .then()
-                    .log().all()
-                    .assertThat().statusCode(404);
-        }
+        given().cookie(cookie).contentType(ContentType.JSON).when().delete("/api/edu-level/" + eduLevelId);
     }
 
     @AfterMethod
