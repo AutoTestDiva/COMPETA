@@ -104,4 +104,34 @@ public class AdministrationPage extends BasePage {
         click(deleteEducationLevelButton);
         return new EducationLevelPage(driver, js);
     }
+
+    @FindBy(xpath = "//button[contains(text(), 'Foreign Language')]")
+    WebElement foreignLanguageButton;
+    public ForeignLanguagePage selectForeignLanguage() {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button[contains(text(), 'Foreign Language')]")));
+        click(foreignLanguageButton);
+        return new ForeignLanguagePage(driver, js);
+    }
+
+    @FindBy(xpath = "//tbody/tr[7]/td[2]/button[1]")
+    WebElement updateForeignLanguageButton;
+    @FindBy(xpath = "//p[contains(text(),'Japanese')]")
+    WebElement foreignLanguageToUpdate;
+    @FindBy(xpath = "//button[contains(text(), 'Save')]")
+    WebElement saveUpdatedForeignLanguageButton;
+    @FindBy(xpath = "//input[contains(@class, 'MuiInputBase-input')]")
+    WebElement foreignLanguageField;
+    public ForeignLanguagePage updateForeignLanguage(String updatedForeignLanguageName){
+        scrollToElement(foreignLanguageToUpdate);
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10)); // Явное ожидание с таймаутом в 10 секунд
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//p[contains(text(),'Japanese')]")));
+        click(updateForeignLanguageButton);
+        click(foreignLanguageToUpdate);
+        foreignLanguageToUpdate.sendKeys(Keys.CONTROL + "a"); // Выделяем текущее значение в поле ввода
+        foreignLanguageToUpdate.sendKeys(Keys.DELETE); // Удаляем текущее значение из поля ввода
+        type(foreignLanguageField, updatedForeignLanguageName); // Вводим новое значение
+        click(saveUpdatedForeignLanguageButton);
+        return new ForeignLanguagePage(driver, js);
+    }
 }
