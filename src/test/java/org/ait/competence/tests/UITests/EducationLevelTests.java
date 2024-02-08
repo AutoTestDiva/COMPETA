@@ -1,67 +1,67 @@
 package org.ait.competence.tests.UITests;
 
-import org.ait.competence.pages.AdministrationPage;
-import org.ait.competence.pages.HomePage;
-import org.ait.competence.pages.LandingPage;
-import org.ait.competence.pages.LogInPage;
+import org.ait.competence.pages.*;
 import org.openqa.selenium.JavascriptExecutor;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-public class AdministrationPageTests extends TestBase {
+public class EducationLevelTests extends TestBase {
 
     @BeforeMethod
-    public void precondition () {
+    public void precondition() {
         JavascriptExecutor js = (JavascriptExecutor) driver;
         new LandingPage(driver, js).selectLogIn();
         new LogInPage(driver, js).logIn("Student33@gmail.com", "Qwerty007!");
     }
 
     @Test
-    public void addNewDriverLicensePositiveTest() {
+    public void addNewEducationLevelPositiveTest() {
         JavascriptExecutor js = (JavascriptExecutor) driver;
         HomePage homePage = new HomePage(driver, js);
         homePage.scrollToTop();
         homePage.scrollToElement(homePage.administratorMenuButton);
         homePage.selectAdministratorMenu();
         homePage.selectAdministration();
-        new AdministrationPage(driver, js).addDriverLicense("D");
+        new AdministrationPage(driver, js).selectEducationLevel();
+        new EducationLevelPage(driver, js).addEducationLevel("Primary school")
+                .verifyNewEducationLevelIsPresent("Primary school");
     }
 
     @Test
-    public void addNewDriverLicenseNegativeTest() {
+    public void addNewEducationLevelNegativeTest() {
         JavascriptExecutor js = (JavascriptExecutor) driver;
         HomePage homePage = new HomePage(driver, js);
         homePage.scrollToTop();
         homePage.scrollToElement(homePage.administratorMenuButton);
         homePage.selectAdministratorMenu();
         homePage.selectAdministration();
-        new AdministrationPage(driver, js).addDriverLicense("D")
-                .verifyDriverLicenseExistsMessageIsPresent("Driver licence with name");
+        new AdministrationPage(driver, js).selectEducationLevel();
+        new EducationLevelPage(driver, js).addEducationLevel("Primary school")
+                .verifyEducationLevelExistsMessageIsPresent("Education level with name");
     }
 
     @Test
-    public void updateDriverLicenseTest() {
+    public void updateEducationLevelTest() {
         JavascriptExecutor js = (JavascriptExecutor) driver;
         HomePage homePage = new HomePage(driver, js);
         homePage.scrollToTop();
         homePage.scrollToElement(homePage.administratorMenuButton);
         homePage.selectAdministratorMenu();
         homePage.selectAdministration();
-        new AdministrationPage(driver, js).updateDriverLicense("M")
-                .verifyNewDriverLicenseIsPresent("M");
+        new AdministrationPage(driver, js).updateEducationLevel("Bachelor`s Degree")
+                .verifyUpdatedEducationLevelIsPresent("Bachelor`s Degree");
     }
 
     @Test
-    public void deleteDriverLicenseTest() {
+    public void deleteEducationLevelTest() {
         JavascriptExecutor js = (JavascriptExecutor) driver;
         HomePage homePage = new HomePage(driver, js);
         homePage.scrollToTop();
         homePage.scrollToElement(homePage.administratorMenuButton);
         homePage.selectAdministratorMenu();
         homePage.selectAdministration();
-        new AdministrationPage(driver, js).deleteDriverLicense()
-                .verifyNewDriverLicenseIsNotPresent("M");
+        new AdministrationPage(driver, js).deleteEducationLevel()
+                .verifyDeletedEducationLevelIsNotPresent("Bachelor`s Degree");
     }
 
 }
