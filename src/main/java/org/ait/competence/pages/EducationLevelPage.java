@@ -30,7 +30,7 @@ public class EducationLevelPage extends BasePage {
     @FindBy(xpath = "//div[contains(text(), 'Education level with name')]")
     WebElement educationLevelExistsMessage;
     public EducationLevelPage verifyEducationLevelExistsMessageIsPresent(String educationLevelWithName) {
-        new AdministrationPage(driver, js).isTextPresent(educationLevelExistsMessage,
+        new EducationLevelPage(driver, js).isTextPresent(educationLevelExistsMessage,
                 "Education level with name");
         return this;
     }
