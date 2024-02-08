@@ -48,17 +48,11 @@ public class DriverLicenceTestsRA {
     }
     @Test()
     public void postAddDriverLicence_WithInvalidEmail_code401_TestRA1() throws SQLException { //User not authenticated
-        cookie = user.getLoginCookie("invalid@gmail.com", "Admin001!"); //сделать ошибку в почте
-        if (cookie != null) {
-            //This is like a precondition, by which we enter the driver-licence in advance:
-            PostDriverLicenceDto postDriverLicence = PostDriverLicenceDto.builder()
-                    .name("A").build();
-            given().cookie(cookie).contentType(ContentType.JSON).body(postDriverLicence).when().post("/api/driver-licence");
-            given().cookie(cookie).contentType(ContentType.JSON).when().post("/api/driver-licence")
-                    .then().assertThat().statusCode(401);
-        } else {
-            System.out.println("Authentication failed. Cannot proceed with the test.");
-        }
+        cookie = user.getLoginCookie("admin1@gmail.com", "Admin001!");
+        PostDriverLicenceDto postDriverLicence = PostDriverLicenceDto.builder()
+                .name("A").build();
+        given().contentType(ContentType.JSON).body(postDriverLicence).when()
+                .post("/api/driver-licence").then().log().all().assertThat().statusCode(401);
     }
 @Test()
 public void postAddDriverLicence_code409_TestRA1() throws SQLException {//DriverLicence with that name already exists
@@ -105,9 +99,9 @@ public void postAddDriverLicence_code409_TestRA1() throws SQLException {//Driver
         given().cookie(cookie).contentType(ContentType.JSON).body(postDriverLicence).when().post("/api/driver-licence");
 
         //Using this method, try to update an existing driver-licence with the wrong "name" in the path ("path"):
-        String driverLicenceId = admin.getDriverLicenceById("invalidLetter");
+        String driverLicenceId = admin.getDriverLicenceById("A");
         UpdateDriverLicenceDto updateDriverLicenceDto = UpdateDriverLicenceDto.builder()
-                .name("C").build();
+                .name("").build();
         given().cookie(cookie).contentType(ContentType.JSON).body(updateDriverLicenceDto).when().put("/api/driver-licence/" + driverLicenceId)
                 .then()
                 .log().all()
@@ -119,24 +113,19 @@ public void postAddDriverLicence_code409_TestRA1() throws SQLException {//Driver
     }
     @Test
     public void putUpdateDriverLicenceById_code401_TestRA() throws SQLException { //User not authenticated
-        cookie = user.getLoginCookie("admin1@gmail.com", "Invalid1!"); //enter incorrect password
-        if (cookie != null) {
-            //This is like a precondition, by which we enter the driver-licence in advance:
-            PostDriverLicenceDto postDriverLicence = PostDriverLicenceDto.builder()
-                    .name("A").build();
-            given().cookie(cookie).contentType(ContentType.JSON).body(postDriverLicence).when().post("/api/driver-licence");
+        cookie = user.getLoginCookie("admin1@gmail.com", "Admin001!");
+        //This is like a precondition, by which we enter the driver-licence in advance:
+        PostDriverLicenceDto postDriverLicence = PostDriverLicenceDto.builder()
+                .name("A").build();
+        given().cookie(cookie).contentType(ContentType.JSON).body(postDriverLicence).when().post("/api/driver-licence");
 
-            //Using this method, try to update an existing driver-licence with an incorrect password in cookies:
-            String driverLicenceId = admin.getDriverLicenceById("A");
-            UpdateDriverLicenceDto updateDriverLicenceDto = UpdateDriverLicenceDto.builder()
-                    .name("C").build();
-            given().cookie(cookie).contentType(ContentType.JSON).body(updateDriverLicenceDto).when().put("/api/driver-licence/" + driverLicenceId)
-                    .then()
-                    .log().all()
-                    .assertThat().statusCode(401);
-        } else {
-           System.out.println("User not authenticated");
-        }
+        //Using this method we try to re-enter an already existing driver-licence:
+        String driverLicenceId = admin.getDriverLicenceById("A");
+        UpdateDriverLicenceDto updateDriverLicenceDto = UpdateDriverLicenceDto.builder()
+                .name("C").build();
+        given().contentType(ContentType.JSON).body(updateDriverLicenceDto).when().put("/api/driver-licence/" + driverLicenceId)
+                .then().log().all().assertThat().statusCode(401);
+
         // deleting an already existing driver-licence:
         String name = "A";
         db.executeUpdate("DELETE FROM `driver_licence` WHERE `name` = '" + name + "';");
@@ -146,31 +135,21 @@ public void postAddDriverLicence_code409_TestRA1() throws SQLException {//Driver
     @Test
     public void putUpdateDriverLicenceById_code404_TestRA() throws SQLException { //Driver licence not found
         cookie = user.getLoginCookie("admin1@gmail.com", "Admin001!");
+        //This is like a precondition, by which we enter the driver-licence in advance:
+        PostDriverLicenceDto postDriverLicence = PostDriverLicenceDto.builder()
+                .name("A").build();
+        given().cookie(cookie).contentType(ContentType.JSON).body(postDriverLicence).when().post("/api/driver-licence");
 
-        // Get the identifier of an existing industry or null if there is no such driver-licence:
+        //Using this method we try to re-enter an already existing driver-licence:
         String driverLicenceId = admin.getDriverLicenceById("A");
+        UpdateDriverLicenceDto updateDriverLicenceDto = UpdateDriverLicenceDto.builder()
+                .name("C").build();
+        given().cookie(cookie).contentType(ContentType.JSON).body(updateDriverLicenceDto).when().put("/api/driver-licence/" + Integer.MAX_VALUE)//в пути указываем несуществующий id несуществующей driver-licence
+                .then().log().all().assertThat().statusCode(404);
 
-        if (driverLicenceId == null) {
-            System.out.println("Driver LicenceId with name 'A' not found");
-        } else {
-            // Error: Trying to update a driver-licence that exists
-            UpdateDriverLicenceDto updateDriverLicenceDto = UpdateDriverLicenceDto.builder()
-                    .name("C").build();
-
-            //Send a PUT request with an existing industry driver-licence
-            Response response = given().cookie(cookie).contentType(ContentType.JSON).body(updateDriverLicenceDto)
-                    .when().put("/api/driver-licence/" + driverLicenceId);
-
-            // Print the whole response for details
-            System.out.println("Response: " + response.asString());
-
-            // Check that the response code is 404
-            response.then().log().all().assertThat().statusCode(404);
-
-            // deleting an already existing driver-licence:
-            String name = "A";
-            db.executeUpdate("DELETE FROM `driver_licence` WHERE `name` = '" + name + "';");
-        }
+        // deleting an already existing driver-licence:
+        String name = "A";
+        db.executeUpdate("DELETE FROM `driver_licence` WHERE `name` = '" + name + "';");
     }
 
     @Test
@@ -215,24 +194,21 @@ public void postAddDriverLicence_code409_TestRA1() throws SQLException {//Driver
     }
     @Test
     public void getListOfDriverLicenceTypes_code401_TestRA() throws SQLException {     //User not authenticated
-        cookie = user.getLoginCookie("invalid@gmail.com", "Admin001!"); //enter wrong mail
-        //It's like a precondition by which we initially invest the driver-licence:
-        if (cookie != null) {
-            PostDriverLicenceDto postDriverLicence = PostDriverLicenceDto.builder()
-                    .name("A").build();
-            given().cookie(cookie).contentType(ContentType.JSON).body(postDriverLicence).when().post("/api/driver-licence");
+        cookie = user.getLoginCookie("admin1@gmail.com", "Admin001!");
+        //This is like a precondition, by which we enter the driver-licence in advance:
+        PostDriverLicenceDto postDriverLicence = PostDriverLicenceDto.builder()
+                .name("A").build();
+        given().cookie(cookie).contentType(ContentType.JSON).body(postDriverLicence).when().post("/api/driver-licence");
 
-            //By this method we get all driver-licence:
-            given().cookie(cookie).contentType("application/json").when().get("api/driver-licence/all")
-                    .then()
-                    .log().all()
-                    .assertThat().statusCode(401);
-        } else {
-            System.out.println("Authentication failed. Cannot proceed with the test.");
-        }
-        // deleting an already existing driver-licence:
-        String name = "A";
-        db.executeUpdate("DELETE FROM `driver_licence` WHERE `name` = '" + name + "';");
+        //By this method we get all driver-licence:
+        given().contentType("application/json").when().get("api/driver-licence/all")
+                .then()
+                .log().all()
+                .assertThat().statusCode(401);
+
+        //Option to delete an existing driver-licence:
+        String driverLicenceId = admin.getDriverLicenceById("A");
+        given().cookie(cookie).contentType(ContentType.JSON).when().delete("/api/driver-licence/" + driverLicenceId);
     }
     @Test
     public void deleteDriverLicenceById_code200_TestRA() throws SQLException { //Driver licence deleted
@@ -253,40 +229,42 @@ public void postAddDriverLicence_code409_TestRA1() throws SQLException {//Driver
 
     @Test
     public void deleteDriverLicenceById_code401_TestRA() throws SQLException {//User not authenticated
-        cookie = user.getLoginCookie("invalid@gmail.com", "Admin001!");//enter wrong mail
-
-        if (cookie != null) {
-            //It's like a precondition by which we initially invest the driver-licence:
-            PostDriverLicenceDto postDriverLicence = PostDriverLicenceDto.builder()
-                    .name("A").build();
-            given().cookie(cookie).contentType(ContentType.JSON).body(postDriverLicence).when().post("/api/driver-licence");
-
-            //With this method we delete an already existing driver-licence:
-            String driverLicenceId = admin.getDriverLicenceById("A");
-            given().cookie(cookie).contentType(ContentType.JSON).when().delete("/api/driver-licence/" + driverLicenceId)
-                    .then()
-                    .log().all()
-                    .assertThat().statusCode(401);
-        } else {
-            System.out.println("Authentication failed. Cannot proceed with the test.");
-        }
-    }
-
-     @Test
-    public void deleteDriverLicenceById_code404_TestRA() throws SQLException { //Driver licence not found
         cookie = user.getLoginCookie("admin1@gmail.com", "Admin001!");
 
-        // Get the identifier of the existing driver-licence or null, if there is no such driver-licence:
+        //It's like a precondition by which we initially invest the driver-licence:
+        PostDriverLicenceDto postDriverLicence = PostDriverLicenceDto.builder()
+                .name("A").build();
+        given().cookie(cookie).contentType(ContentType.JSON).body(postDriverLicence).when().post("/api/driver-licence");
+
+        //With this method we delete an already existing driver-licence:
         String driverLicenceId = admin.getDriverLicenceById("A");
-        if (driverLicenceId == null) {
-            System.out.println("Driver licence  with id 'A' does not found");
-        } else {
-            given().cookie(cookie).contentType(ContentType.JSON).when().delete("/api/driver-licence/" + driverLicenceId)
-                    .then()
-                    .log().all()
-                    .assertThat().statusCode(404);
-        }
+        given().contentType(ContentType.JSON).when().delete("/api/driver-licence/" + driverLicenceId)
+                .then()
+                .log().all()
+                .assertThat().statusCode(401);
+
+        //Option to delete an existing driver-licence:
+        given().cookie(cookie).contentType(ContentType.JSON).when().delete("/api/driver-licence/" + driverLicenceId);
     }
+     @Test
+    public void deleteDriverLicenceById_code404_TestRA() throws SQLException { //Driver licence not found
+         cookie = user.getLoginCookie("admin1@gmail.com", "Admin001!");
+
+         //It's like a precondition by which we initially invest the driver-licence:
+         PostDriverLicenceDto postDriverLicence = PostDriverLicenceDto.builder()
+                 .name("A").build();
+         given().cookie(cookie).contentType(ContentType.JSON).body(postDriverLicence).when().post("/api/driver-licence");
+
+         //With this method we delete an already existing driver-licence:
+         String driverLicenceId = admin.getDriverLicenceById("A");
+         given().cookie(cookie).contentType(ContentType.JSON).when().delete("/api/driver-licence/" + Integer.MAX_VALUE)
+                 .then()
+                 .log().all()
+                 .assertThat().statusCode(404);
+
+         //Option to delete an existing driver-licence:
+         given().cookie(cookie).contentType(ContentType.JSON).when().delete("/api/driver-licence/" + driverLicenceId);
+     }
 
     @AfterMethod
     public static void postConditionRA() throws SQLException {
