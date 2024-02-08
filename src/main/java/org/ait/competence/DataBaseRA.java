@@ -22,6 +22,7 @@ public class DataBaseRA {
             throw new RuntimeException("Error creating database connection", e);
         }
     }
+
     public static ResultSet requestSelect(String query) {
         try {
             Statement statement = DataBaseRA.connection().createStatement();
@@ -54,7 +55,7 @@ public class DataBaseRA {
         }
     }
 
-   public static boolean execute(String query) {
+    public static boolean execute(String query) {
         try {
             return DataBaseRA.connection().createStatement().execute(query);
         } catch (SQLException e) {
@@ -63,7 +64,6 @@ public class DataBaseRA {
     }
 
     public static void requestDelete(String query) {
-
         try (PreparedStatement preparedStatement = DataBaseRA.connection().prepareStatement(query)) {
 //            preparedStatement.setInt(1, userId);
             preparedStatement.executeUpdate();
@@ -71,6 +71,4 @@ public class DataBaseRA {
             exception.printStackTrace();
         }
     }
-
-
 }

@@ -5,7 +5,6 @@ import io.restassured.http.Cookie;
 import io.restassured.response.Response;
 import org.ait.competence.dto.NewUserDto;
 import org.ait.competence.dto.NewUserWithoutNickNameDto;
-import org.ait.competence.dto.PutUserProfileDto;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -20,7 +19,6 @@ public class UserHelperRA extends BaseHelperRA {
     public static String loginDataEncoded(String email, String password) {
         String encodedMail;
         String encodedPassword;
-
         try {
             encodedMail = URLEncoder.encode(email, "UTF-8");
             encodedPassword = URLEncoder.encode(password, "UTF-8");
@@ -103,7 +101,10 @@ public class UserHelperRA extends BaseHelperRA {
         return userConfirmCode;
     }
 
-    public void cleanupDatabase(String email) { //метод,  меняющий в таблице в БД confirmation_code в графе is_used 1 на 0, т.е. чтоб CODE будто ранее не использовался
+    public void cleanupDatabase(String email) {// method to change confirmation_code in the is_used column in the table in the database from 1 to 0, i.e. to make the CODE as if it had not been used before.
+        // code to update values in the database; e.g., reset the is_used value back to 0
+        // and clearing other data, if necessary
+        //метод,  меняющий в таблице в БД confirmation_code в графе is_used 1 на 0, т.е. чтоб CODE будто ранее не использовался
         // код для обновления значений в базе данных; например, сброс значения is_used обратно на 0
         // и очистка других данных, если необходимо
         try {
@@ -114,7 +115,7 @@ public class UserHelperRA extends BaseHelperRA {
         }
     }
 
-    public void userStatusConfirmed(String email) {//меняет статус на CONFIRMED в 2-х таблицах БД users, users_aud
+    public void userStatusConfirmed(String email) {//Changes the status to CONFIRMED in 2 database tables users, users_aud
         try {
             String userId = getUserIdByEmail(email);
             if (userId != null) {
@@ -128,7 +129,7 @@ public class UserHelperRA extends BaseHelperRA {
         }
     }
 
-    public void userRole(String email) {//меняет статус на CONFIRMED в 2-х таблицах БД users, users_aud
+    public void userRole(String email) {//Changes the status to CONFIRMED in 2 database tables users, users_aud
         try {
             String userId = getUserIdByEmail(email);
             db.executeUpdate("UPDATE users_roles SET roles_id = 1 WHERE users_id  = '" + userId + "';");

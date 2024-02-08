@@ -26,8 +26,10 @@ public class AuthenticationTestsRA extends TestBaseRA {
     @Test
     public void loginAsUserPositive_code200_TestRA1() { //Login successful
         AuthResponseDto responseDto = user.loginUserRA("user2@gmail.com", "User002!")
-                .then().log().all()
-                .assertThat().statusCode(200)
+                .then()
+                .log().all()
+                .assertThat()
+                .statusCode(200)
                 .extract().response().as(AuthResponseDto.class);
         System.out.println(responseDto.getMessage());
     }
@@ -35,7 +37,8 @@ public class AuthenticationTestsRA extends TestBaseRA {
     @Test
     public void loginAsUserPositive_code200_TestRA2() { //Login successful
         user.loginUserRA("user2@gmail.com", "User002!")
-                .then().log().all()
+                .then()
+                .log().all()
                 .assertThat().statusCode(200)
                 .assertThat().body("message", containsString("Login successful"));
     }
@@ -52,7 +55,8 @@ public class AuthenticationTestsRA extends TestBaseRA {
     @Test
     public void loginAsUserWithIncorrectPassword_code401_TestRA2() { //Incorrect username or password
         user.loginUserRA("user2@gmail.com", "Invalid000!")
-                .then().log().all()
+                .then()
+                .log().all()
                 .assertThat().statusCode(401)
                 .assertThat().body("message", containsString("Incorrect username or password"));
     }
@@ -70,10 +74,10 @@ public class AuthenticationTestsRA extends TestBaseRA {
     public void logoutAsUserPositive_code200_TestRA2() { //Logout successful
         given().cookie(cookie).when().post("/api/logout")
                 .then()
+                .log().all()
                 .assertThat().statusCode(200)
                 .assertThat().body("message", containsString("Logout successful"));
     }
-
 
     @AfterMethod
     public static void postConditionRA() throws SQLException {

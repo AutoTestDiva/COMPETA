@@ -26,9 +26,18 @@ public class ProfessionTestsRA extends TestBaseRA {
     @Test()
     public void postAddNewProfession_code201_TestRA1() throws SQLException { //Profession added
         cookie = user.getLoginCookie("admin1@gmail.com", "Admin001!");
-        PostAllProfessionsDto postAllProfession = PostAllProfessionsDto.builder().name("programmer1").build();
-        given().cookie(cookie).contentType("application/json").body(postAllProfession).when()
-                .post("/api/profession").then().log().all().assertThat().statusCode(201);
+        PostAllProfessionsDto postAllProfession = PostAllProfessionsDto.builder()
+                .name("programmer1")
+                .build();
+        given()
+                .cookie(cookie)
+                .contentType("application/json")
+                .body(postAllProfession)
+                .when()
+                .post("/api/profession")
+                .then()
+                .log().all()
+                .assertThat().statusCode(201);
         System.out.println(postAllProfession.getName());
 
         //The first method that deletes the above mentioned profession by "name" from the database, so that it will be passed automatically afterwards
@@ -44,26 +53,57 @@ public class ProfessionTestsRA extends TestBaseRA {
     @Test()
     public void postAddNewProfession_code400_TestRA1() throws SQLException { //Not valid value name EduLevel
         cookie = user.getLoginCookie("admin1@gmail.com", "Admin001!");
-        PostAllProfessionsDto postAllProfession = PostAllProfessionsDto.builder().name("").build();
-        given().cookie(cookie).contentType("application/json").body(postAllProfession).when()
-                .post("/api/profession").then().log().all().assertThat().statusCode(400);
+        PostAllProfessionsDto postAllProfession = PostAllProfessionsDto.builder()
+                .name("")
+                .build();
+        given()
+                .cookie(cookie)
+                .contentType("application/json")
+                .body(postAllProfession)
+                .when()
+                .post("/api/profession")
+                .then()
+                .log().all()
+                .assertThat().statusCode(400);
     }
 
     @Test()
     public void postAddNewProfession_WithInvalidEmail_code401_TestRA1() throws SQLException { //User not authenticated
         cookie = user.getLoginCookie("admin1@gmail.com", "Admin001!");
-        PostAllProfessionsDto postAllProfession = PostAllProfessionsDto.builder().name("programmer1").build();
-        given().contentType("application/json").body(postAllProfession).when()
-                .post("/api/profession").then().log().all().assertThat().statusCode(401);
+        PostAllProfessionsDto postAllProfession = PostAllProfessionsDto.builder()
+                .name("programmer1")
+                .build();
+        given()
+                .contentType("application/json")
+                .body(postAllProfession)
+                .when()
+                .post("/api/profession")
+                .then()
+                .log().all()
+                .assertThat().statusCode(401);
     }
-           @Test()
+
+    @Test()
     public void postAddNewProfession_code409_TestRA1() throws SQLException { //Profession with that name already exists
-               cookie = user.getLoginCookie("admin1@gmail.com", "Admin001!");
-               PostAllProfessionsDto postAllProfession = PostAllProfessionsDto.builder().name("programmer1").build();
-               given().cookie(cookie).contentType("application/json").body(postAllProfession).when()
-                       .post("/api/profession");
-               given().cookie(cookie).contentType("application/json").body(postAllProfession).when()
-                       .post("/api/profession").then().log().all().assertThat().statusCode(409);
+        cookie = user.getLoginCookie("admin1@gmail.com", "Admin001!");
+        PostAllProfessionsDto postAllProfession = PostAllProfessionsDto.builder()
+                .name("programmer1")
+                .build();
+        given()
+                .cookie(cookie)
+                .contentType("application/json")
+                .body(postAllProfession)
+                .when()
+                .post("/api/profession");
+        given()
+                .cookie(cookie)
+                .contentType("application/json")
+                .body(postAllProfession)
+                .when()
+                .post("/api/profession")
+                .then()
+                .log().all()
+                .assertThat().statusCode(409);
 
         //The first method that deletes the above mentioned profession by "name" from the database, so that it will be passed automatically afterwards
         //in JENKINS-e and since deleting a user does not delete the profession from the table automatically:
@@ -79,35 +119,65 @@ public class ProfessionTestsRA extends TestBaseRA {
     public void putUpdateProfessionById_code200_TestRA() throws SQLException { //Profession updated
         cookie = user.getLoginCookie("admin1@gmail.com", "Admin001!");
         //This is like a precondition, by which we enter the profession in advance:
-        PostAllProfessionsDto postAllProfession = PostAllProfessionsDto.builder().name("programmer1").build();
-        given().cookie(cookie).contentType(ContentType.JSON).body(postAllProfession).when().post("/api/profession");
+        PostAllProfessionsDto postAllProfession = PostAllProfessionsDto.builder()
+                .name("programmer1")
+                .build();
+        given()
+                .cookie(cookie)
+                .contentType(ContentType.JSON)
+                .body(postAllProfession)
+                .when()
+                .post("/api/profession");
 
         //Using this method we try to re-enter an already existing profession:
         String professionId = admin.getProfessionById("programmer1");
         UpdateProfessionNameDto updateProfessionNameDto = UpdateProfessionNameDto.builder()
-                .name("programmer2").build();
-        given().cookie(cookie).contentType(ContentType.JSON).body(updateProfessionNameDto).when().put("/api/profession/" + professionId)
-                .then().log().all().assertThat().statusCode(200);
+                .name("programmer2")
+                .build();
+        given()
+                .cookie(cookie)
+                .contentType(ContentType.JSON)
+                .body(updateProfessionNameDto)
+                .when()
+                .put("/api/profession/" + professionId)
+                .then()
+                .log().all()
+                .assertThat().statusCode(200);
 
         //The  method that deletes the above mentioned profession by "name" from the database, so that it will be passed automatically afterwards
         //in JENKINS-e and since deleting a user does not delete the profession from the table automatically:
-               String name = "programmer2";
-               db.executeUpdate("DELETE FROM `profession` WHERE `name` = '" + name + "';");
-   }
+        String name = "programmer2";
+        db.executeUpdate("DELETE FROM `profession` WHERE `name` = '" + name + "';");
+    }
 
     @Test
     public void putUpdateProfessionById_code400_TestRA() throws SQLException { //Not valid value name EduLevel
         cookie = user.getLoginCookie("admin1@gmail.com", "Admin001!");
         //This is like a precondition, by which we enter the profession in advance:
-        PostAllProfessionsDto postAllProfession = PostAllProfessionsDto.builder().name("programmer1").build();
-        given().cookie(cookie).contentType(ContentType.JSON).body(postAllProfession).when().post("/api/profession");
+        PostAllProfessionsDto postAllProfession = PostAllProfessionsDto.builder()
+                .name("programmer1")
+                .build();
+        given()
+                .cookie(cookie)
+                .contentType(ContentType.JSON)
+                .body(postAllProfession)
+                .when()
+                .post("/api/profession");
 
         //Using this method, try to update an existing profession with the wrong "name" in the path ("path"):
         String professionId = admin.getProfessionById("programmer1");
         UpdateProfessionNameDto updateProfessionNameDto = UpdateProfessionNameDto.builder()
-                .name("").build();
-        given().cookie(cookie).contentType(ContentType.JSON).body(updateProfessionNameDto).when().put("/api/profession/" + professionId)
-                .then().log().all().assertThat().statusCode(400);
+                .name("")
+                .build();
+        given()
+                .cookie(cookie)
+                .contentType(ContentType.JSON)
+                .body(updateProfessionNameDto)
+                .when()
+                .put("/api/profession/" + professionId)
+                .then()
+                .log().all()
+                .assertThat().statusCode(400);
 
         //The  method that deletes the above mentioned profession by "name" from the database, so that it will be passed automatically afterwards
         //in JENKINS-e and since deleting a user does not delete the profession from the table automatically:
@@ -119,50 +189,57 @@ public class ProfessionTestsRA extends TestBaseRA {
     public void putUpdateProfessionById_code401_TestRA() throws SQLException { //User not authenticated
         cookie = user.getLoginCookie("admin1@gmail.com", "Admin001!");
         //This is like a precondition, by which we enter the profession in advance:
-        PostAllProfessionsDto postAllProfession = PostAllProfessionsDto.builder().name("programmer1").build();
-        given().cookie(cookie).contentType(ContentType.JSON).body(postAllProfession).when().post("/api/profession");
+        PostAllProfessionsDto postAllProfession = PostAllProfessionsDto.builder()
+                .name("programmer1")
+                .build();
+        given()
+                .cookie(cookie)
+                .contentType(ContentType.JSON)
+                .body(postAllProfession)
+                .when()
+                .post("/api/profession");
 
         String professionId = admin.getProfessionById("programmer1");
         UpdateProfessionNameDto updateProfessionNameDto = UpdateProfessionNameDto.builder()
-                .name("programmer2").build();
-        // Check if the current user can update name
-        String userEmail = "admin1@gmail.com";
-        if ("another@gmail.com".equals(userEmail)) {//не вписываем cookie
-            given().contentType(ContentType.JSON).body(updateProfessionNameDto).when()
-                    .put("/api/profession/" + professionId).then().log().all().assertThat()
-                    .statusCode(200);
-        } else {
-            given().contentType(ContentType.JSON).body(updateProfessionNameDto).when()
-                    .put("/api/profession/" + professionId).then().log().all().assertThat()
-                    .statusCode(401);
+                .name("programmer2")
+                .build();
+        given()
+                .contentType(ContentType.JSON)
+                .body(updateProfessionNameDto)
+                .when()
+                .put("/api/profession/" + professionId)
+                .then()
+                .log().all()
+                .assertThat()
+                .statusCode(401);
 
-            //The  method that deletes the above mentioned profession by "name" from the database, so that it will be passed automatically afterwards
-            //in JENKINS-e and since deleting a user does not delete the profession from the table automatically:
-            String name = "programmer1";
-            db.executeUpdate("DELETE FROM `profession` WHERE `name` = '" + name + "';");
-        }
+        //The  method that deletes the above mentioned profession by "name" from the database, so that it will be passed automatically afterwards
+        //in JENKINS-e and since deleting a user does not delete the profession from the table automatically:
+        String name = "programmer1";
+        db.executeUpdate("DELETE FROM `profession` WHERE `name` = '" + name + "';");
     }
 
-   @Test //возможно баг
+    @Test //возможно баг
     public void putUpdateProfessionById_code404_TestRA() throws SQLException { //Profession not found
         cookie = user.getLoginCookie("admin1@gmail.com", "Admin001!");
         //This is like a precondition, by which we enter the profession in advance:
-        PostAllProfessionsDto postAllProfession = PostAllProfessionsDto.builder().name("programmer1").build();
-        given().cookie(cookie)
+        PostAllProfessionsDto postAllProfession = PostAllProfessionsDto.builder()
+                .name("programmer1")
+                .build();
+        given()
+                .cookie(cookie)
                 .contentType(ContentType.JSON)
                 .body(postAllProfession)
                 .when()
                 .post("/api/profession");
 
         //Using this method we try to re-enter an already existing profession:
-//        String professionId = admin.getProfessionById("programmer1");
-
-       UpdateProfessionNameDto updateProfessionNameDto = UpdateProfessionNameDto.builder()
+        UpdateProfessionNameDto updateProfessionNameDto = UpdateProfessionNameDto.builder()
                 .name("programmer2").build();
         given().cookie(cookie).contentType(ContentType.JSON)
                 .body(updateProfessionNameDto)
                 .when()
-                .put("/api/profession/" + Integer.MAX_VALUE)//в пути указываем несуществующий id несуществующей профессии
+                .put("/api/profession/" + Integer.MAX_VALUE) // in the path specify a nonexistent id of a nonexistent profession
                 .then().log().all().assertThat().statusCode(404);
 
         //The  method that deletes the above mentioned profession by "name" from the database, so that it will be passed automatically afterwards
@@ -175,33 +252,59 @@ public class ProfessionTestsRA extends TestBaseRA {
     public void putUpdateProfessionById_code409_TestRA() throws SQLException {//Profession with that name already exists
         cookie = user.getLoginCookie("admin1@gmail.com", "Admin001!");
         //This is like a precondition, by which we enter the profession in advance:
-        PostAllProfessionsDto postAllProfession = PostAllProfessionsDto.builder().name("programmer1").build();
-        given().cookie(cookie).contentType(ContentType.JSON).body(postAllProfession).when().post("/api/profession");
+        PostAllProfessionsDto postAllProfession = PostAllProfessionsDto.builder()
+                .name("programmer1")
+                .build();
+        given()
+                .cookie(cookie)
+                .contentType(ContentType.JSON)
+                .body(postAllProfession)
+                .when()
+                .post("/api/profession");
 
         //With this method, I'm upgrading an existing profession with the same:
         String professionId = admin.getProfessionById("programmer1");
         UpdateProfessionNameDto updateProfessionNameDto = UpdateProfessionNameDto.builder()
-                .name("programmer1").build();
-        given().cookie(cookie).contentType(ContentType.JSON).body(updateProfessionNameDto).when()
-                .put("/api/profession/" + professionId).then().log().all().assertThat()
+                .name("programmer1")
+                .build();
+        given()
+                .cookie(cookie)
+                .contentType(ContentType.JSON)
+                .body(updateProfessionNameDto)
+                .when()
+                .put("/api/profession/" + professionId)
+                .then()
+                .log().all()
+                .assertThat()
                 .statusCode(409);
 
         // The second option of deleting an already existing profession (not through the database):
-        given().cookie(cookie).contentType(ContentType.JSON).when()
-                .delete("/api/profession/" + professionId);
+        given().cookie(cookie).contentType(ContentType.JSON).when().delete("/api/profession/" + professionId);
     }
-
 
     @Test
     public void getListOfProfessions_code200_TestRA() throws SQLException {//List of profession
         cookie = user.getLoginCookie("admin1@gmail.com", "Admin001!");
         //It's like a precondition by which we initially invest the profession:
-        PostAllProfessionsDto postAllProfession = PostAllProfessionsDto.builder().name("programmer1").build();
-        given().cookie(cookie).contentType(ContentType.JSON).body(postAllProfession).when().post("/api/profession");
+        PostAllProfessionsDto postAllProfession = PostAllProfessionsDto.builder()
+                .name("programmer1")
+                .build();
+        given()
+                .cookie(cookie)
+                .contentType(ContentType.JSON)
+                .body(postAllProfession)
+                .when()
+                .post("/api/profession");
 
         //By this method we get all professions:
-        given().cookie(cookie).contentType("application/json").when().get("api/profession/all").then()
-                .log().all().assertThat().statusCode(200);
+        given()
+                .cookie(cookie)
+                .contentType("application/json")
+                .when()
+                .get("api/profession/all")
+                .then()
+                .log().all()
+                .assertThat().statusCode(200);
 
         // The second variant of deleting an already existing profession (not through the database):
         String professionId = admin.getProfessionById("programmer1");
@@ -212,16 +315,32 @@ public class ProfessionTestsRA extends TestBaseRA {
     public void getListOfProfessions_code401_TestRA() throws SQLException {     //User not authenticated
         cookie = user.getLoginCookie("admin1@gmail.com", "Admin001!");
         //It's like a precondition by which we initially invest the profession:
-        PostAllProfessionsDto postAllProfession = PostAllProfessionsDto.builder().name("programmer1").build();
-        given().cookie(cookie).contentType(ContentType.JSON).body(postAllProfession).when().post("/api/profession");
-
+        PostAllProfessionsDto postAllProfession = PostAllProfessionsDto.builder()
+                .name("programmer1")
+                .build();
+        given()
+                .cookie(cookie)
+                .contentType(ContentType.JSON)
+                .body(postAllProfession)
+                .when()
+                .post("/api/profession");
 
         String userEmail = "admin1@gmail.com";
-        if ("another@gmail.com".equals(userEmail)) {//не вписываем cookie
-            given().contentType(ContentType.JSON).when().get("api/profession/all").then().log().all()
+        if ("another@gmail.com".equals(userEmail)) {
+            given()
+                    .contentType(ContentType.JSON)
+                    .when()
+                    .get("api/profession/all")
+                    .then()
+                    .log().all()
                     .assertThat().statusCode(200);
         } else {
-            given().contentType(ContentType.JSON).when().get("api/profession/all").then().log().all()
+            given()
+                    .contentType(ContentType.JSON)
+                    .when()
+                    .get("api/profession/all")
+                    .then()
+                    .log().all()
                     .assertThat().statusCode(401);
         }
         //The  method that deletes the above mentioned profession by "name" from the database, so that it will be passed automatically afterwards
@@ -229,12 +348,20 @@ public class ProfessionTestsRA extends TestBaseRA {
         String name = "programmer1";
         db.executeUpdate("DELETE FROM `profession` WHERE `name` = '" + name + "';");
     }
-     @Test
+
+    @Test
     public void deleteProfessionById_code200_TestRA() throws SQLException { //Profession deleted
         cookie = user.getLoginCookie("admin1@gmail.com", "Admin001!");
         //It's like a precondition by which we initially invest the profession:
-        PostAllProfessionsDto postAllProfessions = PostAllProfessionsDto.builder().name("programmer1").build();
-        given().cookie(cookie).contentType(ContentType.JSON).body(postAllProfessions).when().post("/api/profession");
+        PostAllProfessionsDto postAllProfessions = PostAllProfessionsDto.builder()
+                .name("programmer1")
+                .build();
+        given()
+                .cookie(cookie)
+                .contentType(ContentType.JSON)
+                .body(postAllProfessions)
+                .when()
+                .post("/api/profession");
 
         //With this method we delete an already existing profession:
         String professionId = admin.getProfessionById("programmer1");
@@ -246,20 +373,31 @@ public class ProfessionTestsRA extends TestBaseRA {
     public void deleteProfessionById_code401_TestRA() throws SQLException {//User not authenticated
         cookie = user.getLoginCookie("admin1@gmail.com", "Admin001!");
         //It's like a precondition by which we initially invest the profession:
-        PostAllProfessionsDto postAllProfessions = PostAllProfessionsDto.builder().name("programmer1").build();
-        given().cookie(cookie).contentType(ContentType.JSON).body(postAllProfessions).when().post("/api/profession");
+        PostAllProfessionsDto postAllProfessions = PostAllProfessionsDto.builder()
+                .name("programmer1")
+                .build();
+        given()
+                .cookie(cookie)
+                .contentType(ContentType.JSON)
+                .body(postAllProfessions)
+                .when()
+                .post("/api/profession");
 
         //Use this method to remove an existing skillet:
-            String professionId = admin.getProfessionById("programmer1");
-            given().contentType(ContentType.JSON).when().delete("/api/soft-skill/" + professionId).then()
-                    .log().all().assertThat().statusCode(401);
-
+        String professionId = admin.getProfessionById("programmer1");
+        given()
+                .contentType(ContentType.JSON)
+                .when()
+                .delete("/api/soft-skill/" + professionId)
+                .then()
+                .log().all()
+                .assertThat().statusCode(401);
 
         //The  method that deletes the above mentioned profession by "name" from the database, so that it will be passed automatically afterwards
         //in JENKINS-e and since deleting a user does not delete the profession from the table automatically:
         String name = "programmer1";
         db.executeUpdate("DELETE FROM `profession` WHERE `name` = '" + name + "';");
-        }
+    }
 
     @AfterMethod
 //  @Test

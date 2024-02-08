@@ -2,7 +2,6 @@ package org.ait.competence.tests.restAssuredTests;
 
 import io.restassured.response.Response;
 import org.ait.competence.dto.RegisterUserWithoutNickNameDto;
-import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 
 import java.sql.SQLException;
@@ -29,7 +28,8 @@ public class AuthTestsRA extends TestBaseRA {
     public void registerUserWithoutNickName_400_TestRA1() throws SQLException { // Validation errors
         RegisterUserWithoutNickNameDto registerUserWithoutNickName =
                 user.registerUserWithoutNickName_code400("user2@gmail.com", "User002!")
-                        .then().log().all()
+                        .then()
+                        .log().all()
                         .assertThat().statusCode(400)
                         .extract().response().as(RegisterUserWithoutNickNameDto.class);
     }
@@ -37,11 +37,13 @@ public class AuthTestsRA extends TestBaseRA {
     @Test()
     public void registerUserWithoutNickName_400_TestRA2() throws SQLException { //Validation errors
         user.registerUserWithoutNickName_code400("user2@gmail.com", "User002!")
-                .then().log().all()
+                .then()
+                .log().all()
                 .assertThat().statusCode(400);
     }
 
-    @AfterMethod
+    // @AfterMethod
+    @Test
     public static void postConditionRA() throws SQLException {
         String[] args = {"user2@gmail.com"};
         deleteUser.deleteUserFromDB(args);

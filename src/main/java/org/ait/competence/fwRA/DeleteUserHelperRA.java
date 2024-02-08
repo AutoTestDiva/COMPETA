@@ -26,12 +26,12 @@ public class DeleteUserHelperRA extends BaseHelperRA {
     public static void deleteUserByEmail(String email) {
         try (Connection connection = connection()) {
             connection.setAutoCommit(false);
-            // Найти идентификатор пользователя по электронной почте
+            // Find a user ID by e-mail
             int userId = getUserIdByEmail(connection, email);
             if (userId != -1) {
-                // Обнулить user_profile_id в таблице users для данного пользователя
+                // Zero user_profile_id in the users table for this user
                 updateUserProfileId(connection, userId, null);
-                // Теперь можно удалить записи из user_profile, связанные с пользователем
+                // Now you can delete user_profile entries associated with the user
                 deleteUserProfileByUserId(connection, userId);
                 connection.commit();
             } else {
