@@ -2,6 +2,10 @@ package org.ait.competence.pages;
 
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.time.Duration;
 
 public class AdministrationPage extends BasePage {
     private final JavascriptExecutor js;
@@ -12,7 +16,6 @@ public class AdministrationPage extends BasePage {
 
     @FindBy(xpath = "//input[contains(@class, 'MuiInputBase-input') and not(@id='name1-input')]")
     WebElement driverLicenseField;
-
     @FindBy(xpath = "//thead/tr[1]/th[1]/div[1]/div[2]/button[1]/*[1]")
     WebElement addDriverLicenseButton;
     public AdministrationPage addDriverLicense(String driverLicenseName) {
@@ -68,4 +71,37 @@ public class AdministrationPage extends BasePage {
         }
     }
 
+    @FindBy(xpath = "//button[contains(text(), 'Education Level')]")
+    WebElement educationLevelButton;
+    public EducationLevelPage selectEducationLevel() {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button[contains(text(), 'Education Level')]")));
+        click(educationLevelButton);
+        return new EducationLevelPage(driver, js);
+    }
+
+    @FindBy(xpath = "//tbody/tr[1]/td[2]/button[1]")
+    WebElement updateEducationLevelButton;
+    @FindBy(xpath = "//p[contains(text(),'Primary School')]")
+    WebElement educationLevelToUpdate;
+    @FindBy(xpath = "//button[contains(text(), 'Save')]")
+    WebElement saveUpdatedEducationLevelButton;
+    @FindBy(xpath = "//input[contains(@class, 'MuiInputBase-input')]")
+    WebElement educationLevelField;
+    public EducationLevelPage updateEducationLevel(String updatedEducationLevelName) {
+        click(updateEducationLevelButton);
+        click(educationLevelToUpdate);
+        educationLevelToUpdate.sendKeys(Keys.CONTROL + "a"); // Выделяем текущее значение в поле ввода
+        educationLevelToUpdate.sendKeys(Keys.DELETE); // Удаляем текущее значение из поля ввода
+        type(educationLevelField, updatedEducationLevelName); // Вводим новое значение
+        click(saveUpdatedEducationLevelButton);
+        return new EducationLevelPage(driver, js);
+    }
+
+    @FindBy(xpath = "//tbody/tr[1]/td[3]/button[1]")
+    WebElement deleteEducationLevelButton;
+    public EducationLevelPage deleteEducationLevel() {
+        click(deleteEducationLevelButton);
+        return new EducationLevelPage(driver, js);
+    }
 }
