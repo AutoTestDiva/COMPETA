@@ -57,9 +57,9 @@ public class UserProfileControllerTestsRA extends TestBaseRA {
                 .when()
                 .put("/api/user-profile/" + userId)
                 .then()
-//                .log().all()
+               // .log().all()
                 .assertThat().statusCode(200);
-//      .assertThat().body("firstName", containsString("Morgan"));
+//      .assertThat().body("firstName", containsString("Morgan"))
 //     .assertThat().body("lastName", containsString("Freeman"));
     }
 

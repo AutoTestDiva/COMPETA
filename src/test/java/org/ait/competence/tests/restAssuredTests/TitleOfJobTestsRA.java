@@ -2,7 +2,9 @@ package org.ait.competence.tests.restAssuredTests;
 
 import io.restassured.http.ContentType;
 import io.restassured.http.Cookie;
+import org.ait.competence.dto.PostAllProfessionsDto;
 import org.ait.competence.dto.PostTitleOfJobDto;
+import org.ait.competence.dto.UpdateProfessionNameDto;
 import org.ait.competence.dto.UpdateTitleOfJobDto;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -138,24 +140,32 @@ public class TitleOfJobTestsRA extends TestBaseRA {
         db.executeUpdate("DELETE FROM `job_title` WHERE `name` = '" + name + "';");
 
     }
-//       @Test //возможно баг. и в целом стоит переделать как в Profession
-//    public void putUpdateTitleOfJobById_code404_TestRA() throws SQLException { //Title of job not found
-//        cookie = user.getLoginCookie("admin1@gmail.com", "Admin001!");
-//
-//        // Get the identifier of the existing jobTitle or null, if there is no such jobTitle:
-//        String jobTitleId = admin.getJobTitleIdById("junior1");
-//        if (jobTitleId == null) {
-//            System.out.println("JobTitle  with id 'job_title' does not found");
-//        } else {
-//            UpdateTitleOfJobDto updateTitleOfJobDto = UpdateTitleOfJobDto.builder()
-//                    .name("junior2")
-//                    .build();
-//            // Send a PUT request with the correct jobTitle ID:
-//            given().cookie(cookie).contentType(ContentType.JSON).body(updateTitleOfJobDto)
-//                    .when().put("/api/job-title/" + jobTitleId)
-//                    .then().assertThat().statusCode(404);
-//        }
-//    }
+       @Test
+    public void putUpdateTitleOfJobById_code404_TestRA() throws SQLException { //Title of job not found
+           cookie = user.getLoginCookie("admin1@gmail.com", "Admin001!");
+           //This is like a precondition, by which we enter the profession in advance:
+           PostAllProfessionsDto postAllProfession = PostAllProfessionsDto.builder().name("junior1").build();
+           given().cookie(cookie)
+                   .contentType(ContentType.JSON)
+                   .body(postAllProfession)
+                   .when()
+                   .post("/api/job-title");
+
+        // Get the identifier of the existing jobTitle or null, if there is no such jobTitle:
+
+           UpdateProfessionNameDto updateProfessionNameDto = UpdateProfessionNameDto.builder()
+                   .name("junior2").build();
+           given().cookie(cookie).contentType(ContentType.JSON)
+                   .body(updateProfessionNameDto)
+                   .when()
+                  // .put("/api/job-title/" + Integer.MAX_VALUE)//в пути указываем несуществующий id несуществующей job-title
+                   .put("/api/job-title/10000000")//второй вариант проверки
+                   .then().log().all().assertThat().statusCode(404);
+
+           // The second variant of deleting an already existing jobTitle (not through the database):
+           String jobTitleId = admin.getJobTitleIdById("junior1");
+           given().cookie(cookie).contentType(ContentType.JSON).when().delete("/api/job-title/" + jobTitleId);
+       }
 
 
     @Test

@@ -143,25 +143,33 @@ public class ProfessionTestsRA extends TestBaseRA {
         }
     }
 
- /*  @Test //возможно баг
+   @Test //возможно баг
     public void putUpdateProfessionById_code404_TestRA() throws SQLException { //Profession not found
         cookie = user.getLoginCookie("admin1@gmail.com", "Admin001!");
         //This is like a precondition, by which we enter the profession in advance:
         PostAllProfessionsDto postAllProfession = PostAllProfessionsDto.builder().name("programmer1").build();
-        given().cookie(cookie).contentType(ContentType.JSON).body(postAllProfession).when().post("/api/profession");
+        given().cookie(cookie)
+                .contentType(ContentType.JSON)
+                .body(postAllProfession)
+                .when()
+                .post("/api/profession");
 
         //Using this method we try to re-enter an already existing profession:
-        String professionId = admin.getProfessionById("nonExistentProfession");
-        UpdateProfessionNameDto updateProfessionNameDto = UpdateProfessionNameDto.builder()
+//        String professionId = admin.getProfessionById("programmer1");
+
+       UpdateProfessionNameDto updateProfessionNameDto = UpdateProfessionNameDto.builder()
                 .name("programmer2").build();
-        given().cookie(cookie).contentType(ContentType.JSON).body(updateProfessionNameDto).when().put("/api/profession/" + professionId)
+        given().cookie(cookie).contentType(ContentType.JSON)
+                .body(updateProfessionNameDto)
+                .when()
+                .put("/api/profession/" + Integer.MAX_VALUE)//в пути указываем несуществующий id несуществующей профессии
                 .then().log().all().assertThat().statusCode(404);
 
         //The  method that deletes the above mentioned profession by "name" from the database, so that it will be passed automatically afterwards
         //in JENKINS-e and since deleting a user does not delete the profession from the table automatically:
         String name = "programmer1";
         db.executeUpdate("DELETE FROM `profession` WHERE `name` = '" + name + "';");
-    }*/
+    }
 
     @Test
     public void putUpdateProfessionById_code409_TestRA() throws SQLException {//Profession with that name already exists

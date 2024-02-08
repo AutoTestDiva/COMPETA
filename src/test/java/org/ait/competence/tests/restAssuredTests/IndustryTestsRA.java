@@ -2,7 +2,6 @@ package org.ait.competence.tests.restAssuredTests;
 
 import io.restassured.http.ContentType;
 import io.restassured.http.Cookie;
-import io.restassured.response.Response;
 import org.ait.competence.dto.*;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -128,31 +127,28 @@ public class IndustryTestsRA extends TestBaseRA {
         db.executeUpdate("DELETE FROM `industry` WHERE `name` = '" + name + "';");
     }
 
-//    @Test //возможно баг. см. Profession
-//    public void putUpdateIndustryById_code404_TestRA() throws SQLException { //Industry not found
-//        cookie = user.getLoginCookie("admin1@gmail.com", "Admin001!");
-//
-//        // Get the identifier of an existing industry or null if there is no such industry:
-//        String industryId = admin.getIndustryById("education1");
-//
-//        if (industryId == null) {
-//            System.out.println("Industry with name 'education1' not found");
-//        } else {
-//            // Error: Trying to update an industry that exists
-//            UpdateIndustryDto updateIndustryDto = UpdateIndustryDto.builder()
-//                    .name("education2").build();
-//
-//            //Send a PUT request with an existing industry identifier
-//            Response response = given().cookie(cookie).contentType(ContentType.JSON).body(updateIndustryDto)
-//                    .when().put("/api/industry/" + industryId);
-//
-//            // Print the whole response for details (can be removed in production code)
-//            System.out.println("Response: " + response.asString());
-//
-//            // Check that the response code is 404
-//            response.then().log().all().assertThat().statusCode(404);
-//        }
-//    }
+    @Test
+    public void putUpdateIndustryById_code404_TestRA() throws SQLException { //Industry not found
+        cookie = user.getLoginCookie("admin1@gmail.com", "Admin001!");
+        //It's like a precondition that we put in beforehand:
+        PostIndustryDto postIndustry = PostIndustryDto.builder().name("education1").build();
+        given().cookie(cookie).contentType(ContentType.JSON).body(postIndustry).when().post("/api/industry");
+
+        //Using this method we try to re-enter an already existing profession:
+        //String professionId = admin.getProfessionById("programmer1");
+
+        UpdateProfessionNameDto updateProfessionNameDto = UpdateProfessionNameDto.builder()
+                .name("education2").build();
+        given().cookie(cookie).contentType(ContentType.JSON)
+                .body(updateProfessionNameDto)
+                .when()
+                .put("/api/industry/" + Integer.MAX_VALUE)//в пути указываем несуществующий id несуществующей industry
+                .then().log().all().assertThat().statusCode(404);
+
+        // deleting an already existing industry:
+        String name = "education1";
+        db.executeUpdate("DELETE FROM `industry` WHERE `name` = '" + name + "';");
+    }
 
     @Test
     public void putUpdateIndustryById_code409_TestRA() throws SQLException {//Industry with that name already exists
@@ -188,17 +184,17 @@ public class IndustryTestsRA extends TestBaseRA {
         given().cookie(cookie).contentType(ContentType.JSON).when().delete("/api/industry/" + industryId);
     }
 
-//    @Test() //подкорректировать
-//    public void getListOfIndustries_code400_TestRA1() throws SQLException { //Validation errors
-//        cookie = user.getLoginCookie("admin1@gmail.com", "Admin001!");
-//
-//        given().cookie(cookie).contentType("application/json").when().get("/api/industry/all")
-//                .then().log().all().assertThat().statusCode(400);
-//
-//        //Option to delete an existing industry:
-////        String industryId = admin.getIndustryById("education1");
-////        given().cookie(cookie).contentType(ContentType.JSON).when().delete("/api/industry/" + industryId);
-//    }
+/*    @Test() // БАГ
+    public void getListOfIndustries_code400_TestRA1() throws SQLException { //Validation errors
+        cookie = user.getLoginCookie("admin1@gmail.com", "Admin001!");
+
+        given().cookie(cookie).contentType("application/json").when().get("/api/industry/all")
+                .then().log().all().assertThat().statusCode(400);
+
+        //Option to delete an existing industry:
+//        String industryId = admin.getIndustryById("education1");
+//        given().cookie(cookie).contentType(ContentType.JSON).when().delete("/api/industry/" + industryId);
+    }*/
 
     @Test
     public void getListOfIndustries_code401_TestRA() throws SQLException {     //User not authenticated
