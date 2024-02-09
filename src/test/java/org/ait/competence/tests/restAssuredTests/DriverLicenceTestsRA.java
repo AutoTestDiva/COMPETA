@@ -242,7 +242,6 @@ public class DriverLicenceTestsRA extends TestBaseRA {
             String name = "A";
             db.executeUpdate("DELETE FROM `driver_licence` WHERE `name` = '" + name + "';");
         }
-    }
 
     @Test
     public void putUpdateDriverLicenceById_code409_TestRA() throws SQLException {//driver-licence with that name already exists
