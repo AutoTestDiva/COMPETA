@@ -223,7 +223,7 @@ public class DriverLicenceTestsRA extends TestBaseRA {
                 .when()
                 .post("/api/driver-licence");
 
-        //Using this method we try to re-enter an already existing driver-licence:
+        // Get the identifier of an existing industry or null if there is no such driver-licence:
         String driverLicenceId = admin.getDriverLicenceById("A");
         UpdateDriverLicenceDto updateDriverLicenceDto = UpdateDriverLicenceDto.builder()
                 .name("C")
@@ -238,9 +238,10 @@ public class DriverLicenceTestsRA extends TestBaseRA {
                 .log().all()
                 .assertThat().statusCode(404);
 
-        // deleting an already existing driver-licence:
-        String name = "A";
-        db.executeUpdate("DELETE FROM `driver_licence` WHERE `name` = '" + name + "';");
+            // deleting an already existing driver-licence:
+            String name = "A";
+            db.executeUpdate("DELETE FROM `driver_licence` WHERE `name` = '" + name + "';");
+        }
     }
 
     @Test
