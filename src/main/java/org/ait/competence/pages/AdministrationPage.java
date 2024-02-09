@@ -93,8 +93,17 @@ public class AdministrationPage extends BasePage {
     WebElement foreignLanguageLevelButton;
     public ForeignLanguageLevelPage selectForeignLanguageLevel() {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button[contains(text(), 'Education Level')]")));
+        WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button[contains(text(), 'Foreign Language Level')]")));
         click(foreignLanguageLevelButton);
         return new ForeignLanguageLevelPage(driver, js);
+    }
+
+    @FindBy(xpath = "//button[contains(text(), 'Industry')]")
+    WebElement industryButton;
+    public IndustryPage selectIndustry() {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button[contains(text(), 'Industry')]")));
+        click(industryButton);
+        return new IndustryPage(driver, js);
     }
 }
