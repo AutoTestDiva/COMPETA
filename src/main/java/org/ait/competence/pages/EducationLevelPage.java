@@ -10,7 +10,8 @@ public class EducationLevelPage extends BasePage {
         this.js = js;
     }
 
-    @FindBy(xpath = "//input[@id='name1-input']")
+    //@FindBy(xpath = "//input[@id='name1-input']")
+    @FindBy(xpath = "//input[contains(@class, 'MuiInputBase-input')]")
     WebElement educationLevelField;
     @FindBy(xpath = "//thead/tr[1]/th[1]/div[1]/div[2]/button[1]/*[1]")
     WebElement addEducationLevelButton;
@@ -35,10 +36,35 @@ public class EducationLevelPage extends BasePage {
         return this;
     }
 
+    @FindBy(xpath = "//tbody/tr[1]/td[2]/button[1]")
+    WebElement updateEducationLevelButton;
+    @FindBy(xpath = "//p[contains(text(),'Primary School')]")
+    WebElement educationLevelToUpdate;
+    @FindBy(xpath = "//button[contains(text(), 'Save')]")
+    WebElement saveUpdatedEducationLevelButton;
+//    @FindBy(xpath = "//input[contains(@class, 'MuiInputBase-input')]")
+//    WebElement educationLevelField;
+    public EducationLevelPage updateEducationLevel(String updatedEducationLevelName) {
+        click(updateEducationLevelButton);
+        click(educationLevelToUpdate);
+        educationLevelToUpdate.sendKeys(Keys.CONTROL + "a"); // Выделяем текущее значение в поле ввода
+        educationLevelToUpdate.sendKeys(Keys.DELETE); // Удаляем текущее значение из поля ввода
+        type(educationLevelField, updatedEducationLevelName); // Вводим новое значение
+        click(saveUpdatedEducationLevelButton);
+        return new EducationLevelPage(driver, js);
+    }
+
     @FindBy(xpath = "//p[contains(text(),'Bachelor`s Degree')]")
     WebElement updatedEducationLevelField;
     public EducationLevelPage verifyUpdatedEducationLevelIsPresent(String updatedEducationLevelName) {
         isTextPresent(updatedEducationLevelField, updatedEducationLevelName);
+        return new EducationLevelPage(driver, js);
+    }
+
+    @FindBy(xpath = "//tbody/tr[1]/td[3]/button[1]")
+    WebElement deleteEducationLevelButton;
+    public EducationLevelPage deleteEducationLevel() {
+        click(deleteEducationLevelButton);
         return new EducationLevelPage(driver, js);
     }
 

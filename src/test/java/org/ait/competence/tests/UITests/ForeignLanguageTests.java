@@ -49,7 +49,7 @@ public class ForeignLanguageTests extends TestBase {
         homePage.selectAdministratorMenu();
         homePage.selectAdministration();
         new AdministrationPage(driver, js).selectForeignLanguage();
-        new AdministrationPage(driver, js).updateForeignLanguage("Greek")
+        new ForeignLanguagePage(driver, js).updateForeignLanguage("Greek")
                 .verifyUpdatedForeignLanguageIsPresent("Greek");
     }
 
@@ -65,5 +65,4 @@ public class ForeignLanguageTests extends TestBase {
         new ForeignLanguagePage(driver, js).deleteForeignLanguage()
                 .verifyDeletedForeignLanguageIsNotPresent("Bachelor`s Degree");
     }
-
 }
