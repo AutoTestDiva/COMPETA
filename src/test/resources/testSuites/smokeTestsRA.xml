@@ -1,0 +1,12 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
+
+<suite name="SmokeTestsRA" verbose="1" >
+
+    <test name="SmokeTestsRA" >
+        <classes>
+            <class name="org.ait.competence.tests.restAssuredTests.AuthTestsRA"/>
+            <class name="org.ait.competence.tests.restAssuredTests.AuthenticationTestsRA"/>
+        </classes>
+    </test>
+
+</suite>
