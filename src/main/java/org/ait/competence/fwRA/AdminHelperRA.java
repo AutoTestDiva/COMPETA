@@ -171,4 +171,29 @@ public class AdminHelperRA extends BaseHelperRA {
         }
         return professionId;
     }
-}
+
+    public String getLanguageById(String name) {
+        String languageId;
+        try {
+            languageId = db.requestSelect("SELECT id FROM `foreign_language` WHERE name = '" + name + "';")
+                    .getString(1);
+        } catch (SQLException e) {
+            languageId = null;
+            System.out.println("The name is not found" + e);
+        }
+        return languageId;
+    }
+
+    public String getLanguageLEVELById(String name) {
+           String languageLEVELId;
+            try {
+                languageLEVELId = db.requestSelect("SELECT id FROM foreign_language_level WHERE name = '" + name + "';")
+                        .getString(1);
+            } catch (SQLException e) {
+                languageLEVELId = null;
+                System.out.println("The name is not found" + e);
+            }
+            return languageLEVELId;
+        }
+    }
+

@@ -22,7 +22,7 @@ public class DriverLicenceAllWithCode_403_testsRA extends TestBaseRA {
         user.userStatusConfirmed("user5@gmail.com"); //changes the status to CONFIRMED in 2 database tables users, users_aud
         admin.adminRole("user5@gmail.com");         //присваиваем в базе данных роль ADMIN
         cookie = user.getLoginCookie("user5@gmail.com", "User005!");
-    }
+   }
 
     @Test
     public void postAddDriverLicence_code403_TestRA() throws SQLException { //Access denied for user with email <{0}> and role {1}
