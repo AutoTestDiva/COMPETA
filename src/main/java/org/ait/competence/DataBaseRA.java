@@ -1,5 +1,7 @@
 package org.ait.competence;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.IOException;
@@ -8,6 +10,7 @@ import java.sql.*;
 import java.util.Map;
 
 public class DataBaseRA {
+    private static final Logger logger = LoggerFactory.getLogger(DataBaseRA.class);
     public static Connection connection() {
         try (InputStream inputStream = DataBaseRA.class.getClassLoader().getResourceAsStream("application.yml")) {
             Yaml yaml = new Yaml();
@@ -55,7 +58,7 @@ public class DataBaseRA {
         }
     }
 
-    public static boolean execute(String query) {
+     public static boolean execute(String query) {
         try {
             return DataBaseRA.connection().createStatement().execute(query);
         } catch (SQLException e) {

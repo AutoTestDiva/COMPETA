@@ -2,8 +2,7 @@ package org.ait.competence.tests.restAssuredTests;
 
 import io.restassured.http.ContentType;
 import io.restassured.http.Cookie;
-import org.ait.competence.dto.PostAddNewEduLevelDto;
-import org.ait.competence.dto.UpdateEduLevelDto;
+import org.ait.competence.dto.*;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -12,12 +11,12 @@ import java.sql.SQLException;
 
 import static io.restassured.RestAssured.given;
 
-public class EduLevelAllWithCode_403_testsRA extends TestBaseRA {
+public class ForeignLanguageApiAllWithCode_403_testsRA extends TestBaseRA {
     private Cookie cookie;
 
     @BeforeMethod
     public void preconditionForTestsWithCode_403_TestsRA() throws SQLException {
-        //First register a user with the ADMIN role, otherwise we won't be able to attach edu-level:
+        //first register a user with the role of ADMIN, otherwise we can't put ForeignLanguage:
         user.registerUser("user5@gmail.com", "User005!", "superUser5");
         user.userStatusConfirmed("user5@gmail.com"); //changes the status to CONFIRMED in 2 database tables users, users_aud
         admin.adminRole("user5@gmail.com");         //assign the ADMIN role in the database
@@ -25,15 +24,62 @@ public class EduLevelAllWithCode_403_testsRA extends TestBaseRA {
     }
 
     @Test
-    public void postAddNewEduLevel_code403_TestRA() throws SQLException {//Access denied for user with email <{0}> and role {1}
+    public void postForeignLanguage_code403_TestRA() throws SQLException {//Access denied for user with email <{0}> and role {1}
         //One more precondition:
         //Then change the user role from ADMIN to USER:
-        user.userRole("user5@gmail.com"); //assign the USER role in the database
-        //Update the cookie so that the user already has the status USER
+        user.userRole("user5@gmail.com"); //Assign the USER role in the database
+        //Update the cookie so that the user already has the USER status
         cookie = user.getLoginCookie("user5@gmail.com", "User005!");
+
         //The method itself
-        PostAddNewEduLevelDto postAddNewEduLevelDto = PostAddNewEduLevelDto.builder()
-                .name("higher education")
+        PostForeignLanguageDto postForeignLanguage = PostForeignLanguageDto.builder()
+                .name("english")
+                .build();
+        // Check if the current user can update name
+        String userEmail = "user5@gmail.com";
+        if ("admin1@gmail.com".equals(userEmail)) {
+            given()
+                    .cookie(cookie)
+                    .contentType(ContentType.JSON)
+                    .body(postForeignLanguage)
+                    .when()
+                    .post("/api/language").then().assertThat().statusCode(200);
+        } else {
+            given()
+                    .cookie(cookie)
+                    .contentType(ContentType.JSON)
+                    .body(postForeignLanguage)
+                    .when()
+                    .post("/api/language")
+                    .then()
+                    .log().all()
+                    .assertThat().statusCode(403);
+        }
+    }
+
+    @Test
+    public void putUpdateForeignLanguage_AccessDenied_code403_TestRA() throws SQLException {//Access denied for user with email <{0}> and role {1}
+        //One more precondition:
+        //Input the database Foreign Language as admin:
+        PostForeignLanguageDto postForeignLanguage = PostForeignLanguageDto.builder()
+                .name("english")
+                .build();
+        given()
+                .cookie(cookie)
+                .contentType(ContentType.JSON)
+                .body(postForeignLanguage)
+                .when()
+                .post("/api/language");
+
+        //Then change the user role from ADMIN to USER:
+        user.userRole("user5@gmail.com"); //Assign the USER role in the database
+        //Update the cookie so that the user already has the USER status
+        cookie = user.getLoginCookie("user5@gmail.com", "User005!");
+
+        //The method itself
+        String languageId = admin.getLanguageById("english");
+        UpdateForeignLanguageDto updateForeignLanguageDto = UpdateForeignLanguageDto.builder()
+                .name("french")
                 .build();
 
         // Check if the current user can update name
@@ -42,18 +88,18 @@ public class EduLevelAllWithCode_403_testsRA extends TestBaseRA {
             given()
                     .cookie(cookie)
                     .contentType(ContentType.JSON)
-                    .body(postAddNewEduLevelDto)
+                    .body(updateForeignLanguageDto)
                     .when()
-                    .post("/api/edu-level")
+                    .put("/api/language/" + languageId)
                     .then()
                     .assertThat().statusCode(200);
         } else {
             given()
                     .cookie(cookie)
                     .contentType(ContentType.JSON)
-                    .body(postAddNewEduLevelDto)
+                    .body(updateForeignLanguageDto)
                     .when()
-                    .post("/api/edu-level")
+                    .put("/api/language/" + languageId)
                     .then()
                     .log().all()
                     .assertThat().statusCode(403);
@@ -61,18 +107,18 @@ public class EduLevelAllWithCode_403_testsRA extends TestBaseRA {
     }
 
     @Test
-    public void putUpdateEduLevelById_AccessDenied_code403_TestRA() throws SQLException {//Access denied for user with email <{0}> and role {1}
+    public void deleteForeignLanguageById_code403_TestRA() throws SQLException { //Access denied for user with email <{0}> and role {1}
         //One more precondition:
-        //Input the edu-level database as admin:
-        PostAddNewEduLevelDto postAddNewEduLevelDto = PostAddNewEduLevelDto.builder()
-                .name("higher education")
+        //Input the database Foreign Language as admin:
+        PostForeignLanguageDto postForeignLanguage = PostForeignLanguageDto.builder()
+                .name("english")
                 .build();
         given()
                 .cookie(cookie)
                 .contentType(ContentType.JSON)
-                .body(postAddNewEduLevelDto)
+                .body(postForeignLanguage)
                 .when()
-                .post("/api/edu-level");
+                .post("/api/language");
 
         //Then change the user role from ADMIN to USER:
         user.userRole("user5@gmail.com"); //Assign the USER role in the database
@@ -80,55 +126,7 @@ public class EduLevelAllWithCode_403_testsRA extends TestBaseRA {
         cookie = user.getLoginCookie("user5@gmail.com", "User005!");
 
         //The method itself
-        String eduLevelId = admin.getEduLevelById("higher education");
-        UpdateEduLevelDto updateEduLevelDto = UpdateEduLevelDto.builder()
-                .name("school")
-                .build();
-
-        // Check if the current user can update name
-        String userEmail = "user5@gmail.com";
-        if ("admin1@gmail.com".equals(userEmail)) {
-            given()
-                    .cookie(cookie)
-                    .contentType(ContentType.JSON)
-                    .body(updateEduLevelDto)
-                    .when()
-                    .put("/api/edu-level/" + eduLevelId).then().assertThat()
-                    .statusCode(200);
-        } else {
-            given()
-                    .cookie(cookie)
-                    .contentType(ContentType.JSON)
-                    .body(updateEduLevelDto)
-                    .when()
-                    .put("/api/edu-level/" + eduLevelId)
-                    .then()
-                    .log().all()
-                    .assertThat().statusCode(403);
-        }
-    }
-
-    @Test
-    public void deleteEduLevelById_code403_TestRA() throws SQLException { //Access denied for user with email <{0}> and role {1}
-        //One more precondition:
-        //Input the edu-level database as admin:
-        PostAddNewEduLevelDto postAddNewEduLevelDto = PostAddNewEduLevelDto.builder()
-                .name("higher education")
-                .build();
-        given()
-                .cookie(cookie)
-                .contentType(ContentType.JSON)
-                .body(postAddNewEduLevelDto)
-                .when()
-                .post("/api/edu-level");
-
-        //Then change the user role from ADMIN to USER:
-        user.userRole("user5@gmail.com"); //Assign the USER role in the database
-        //Update the cookie so that the user already has the USER status
-        cookie = user.getLoginCookie("user5@gmail.com", "User005!");
-
-        //The method itself
-        String eduLevelId = admin.getEduLevelById("higher education");
+        String languageId = admin.getLanguageById("english");
         // Check if the current user can delete name
         String userEmail = "user5@gmail.com";
         if ("admin1@gmail.com".equals(userEmail)) {
@@ -136,7 +134,7 @@ public class EduLevelAllWithCode_403_testsRA extends TestBaseRA {
                     .cookie(cookie)
                     .contentType(ContentType.JSON)
                     .when()
-                    .delete("/api/edu-level/" + eduLevelId)
+                    .delete("/api/language/" + languageId)
                     .then()
                     .assertThat()
                     .statusCode(200);
@@ -145,7 +143,7 @@ public class EduLevelAllWithCode_403_testsRA extends TestBaseRA {
                     .cookie(cookie)
                     .contentType(ContentType.JSON)
                     .when()
-                    .delete("/api/edu-level/" + eduLevelId)
+                    .delete("/api/language/" + languageId)
                     .then()
                     .log().all()
                     .assertThat()
@@ -154,15 +152,12 @@ public class EduLevelAllWithCode_403_testsRA extends TestBaseRA {
     }
 
     @AfterMethod
-    // @Test
-    public static void postConditionForTestsWithCode_403_TestsRA() throws SQLException {
-        // deleting an already existing edu-level from DataBase, we're scrubbing the database:
-        String name = "higher education";
-        db.executeUpdate("DELETE FROM `edu_level` WHERE `name` = '" + name + "';");
+    public static void postConditionRA() throws SQLException {
+        // deleting an already existing foreign_language from DataBase, clean up the database:
+        String name = "english";
+        db.executeUpdate("DELETE FROM `foreign_language` WHERE `name` = '" + name + "';");
 
-        //Delete the user from the 4 users tables in the database
         String[] args = {"user5@gmail.com"};
         deleteUser.deleteUserFromDB(args);
     }
 }
-
